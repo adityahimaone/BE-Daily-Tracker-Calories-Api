@@ -1,0 +1,17 @@
+{
+  "debug": true,
+  "server": {
+    "address": ":8080"
+  },
+  "database": {
+    "host": "localhost",
+    "port": "3306",
+    "user": "root",
+    "pass": "",
+    "name": "dailycalories_test"
+  },
+  "jwt": {
+    "secret": "supersecret12345!@#$%",
+    "expired": 1
+  }
+}
