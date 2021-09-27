@@ -1,6 +1,7 @@
 package main
 
 import (
+	_middleware "daily-tracker-calories/app/middleware"
 	_handlerUsers "daily-tracker-calories/app/presenter/users"
 	"daily-tracker-calories/app/routes"
 	_serviceUsers "daily-tracker-calories/bussiness/users"
@@ -8,15 +9,15 @@ import (
 	_repositoryUsers "daily-tracker-calories/repository/mysql/users"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
-
 	"github.com/spf13/viper"
 	"log"
-	"os"
 )
 
 func init() {
-	appPath := os.Getenv("APP_PATH")
-	viper.SetConfigFile(appPath + `/app/config/example-config.json`)
+	viper.SetConfigName("test-config")
+	viper.AddConfigPath("./app/config/")
+	viper.AutomaticEnv()
+	viper.SetConfigType("json")
 	err := viper.ReadInConfig()
 	if err != nil {
 		panic(err)
@@ -51,5 +52,6 @@ func main() {
 		UserHandler: *usersHandler,
 	}
 	routesInit.RouteRegister(e)
+	_middleware.LogMiddleware(e)
 	log.Fatal(e.Start(viper.GetString("server.address")))
 }

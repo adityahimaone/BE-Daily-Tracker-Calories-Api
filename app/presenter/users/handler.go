@@ -22,17 +22,17 @@ func NewHandler(userService users.Service) *Presenter {
 func (handler *Presenter) RegisterUser(echoContext echo.Context) error {
 	var req _request.UserRegister
 	if err := echoContext.Bind(&req); err != nil {
-		response := helper.APIResponse("Failed Register", http.StatusBadRequest, "error", nil)
+		response := helper.APIResponse("Failed Register", http.StatusBadRequest, "Error", nil)
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
 
 	domain := _request.ToDomain(req)
 	resp, err := handler.serviceUser.RegisterUser(domain)
 	if err != nil {
-		response := helper.APIResponse("Failed Register", http.StatusBadRequest, "error", nil)
+		response := helper.APIResponse("Failed Register", http.StatusBadRequest, "Error", nil)
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
 
-	response := helper.APIResponse("Success Register User", http.StatusOK, "error", _response.FromDomain(*resp))
+	response := helper.APIResponse("Success Register User", http.StatusOK, "Success", _response.FromDomain(*resp))
 	return echoContext.JSON(http.StatusOK, response)
 }
