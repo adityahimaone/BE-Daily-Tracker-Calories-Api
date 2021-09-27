@@ -5,7 +5,7 @@ import "time"
 type Domain struct {
 	ID        int
 	Name      string
-	Username  string
+	Email     string
 	Password  string
 	Avatar    string
 	Gender    string
