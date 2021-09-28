@@ -30,6 +30,10 @@ func (s *serviceUsers) FindByID(id int) (*Domain, error) {
 	panic("implement me")
 }
 
-func (s *serviceUsers) Login(username string, password string) (*Domain, error) {
-	panic("implement me")
+func (s *serviceUsers) Login(user *Domain) (*Domain, error) {
+	result, err := s.repository.Login(user)
+	if err != nil {
+		return &Domain{}, err
+	}
+	return result, nil
 }

@@ -5,35 +5,40 @@ import (
 	"gorm.io/gorm"
 )
 
-type repositoryUsers struct{
+type repositoryUsers struct {
 	DB *gorm.DB
 }
 
 func (repository repositoryUsers) Insert(user *users.Domain) (*users.Domain, error) {
 	recordUser := fromDomain(*user)
-	if err := repository.DB.Create(&recordUser).Error; err != nil{
+	if err := repository.DB.Create(&recordUser).Error; err != nil {
 		return &users.Domain{}, err
 	}
 	return user, nil
 }
 
-func (r repositoryUsers) Update(user *users.Domain) (*users.Domain, error) {
+func (repository repositoryUsers) Update(user *users.Domain) (*users.Domain, error) {
 	panic("implement me")
 }
 
-func (r repositoryUsers) FindByID(id int) (*users.Domain, error) {
+func (repository repositoryUsers) FindByID(id int) (*users.Domain, error) {
 	panic("implement me")
 }
 
-func (r repositoryUsers) FindByEmail(email string) (*users.Domain, error) {
+func (repository repositoryUsers) FindByEmail(email string) (*users.Domain, error) {
 	panic("implement me")
 }
 
-func (r repositoryUsers) Login(username string, password string) (*users.Domain, error) {
-	panic("implement me")
+func (repository repositoryUsers) Login(user *users.Domain) (*users.Domain, error) {
+	recordUser := fromDomain(*user)
+	if err := repository.DB.Where("email = ? & password ?", recordUser.Email, recordUser.Password).Error; err != nil {
+		return &users.Domain{}, err
+	}
+	result := toDomain(recordUser)
+	return &result, nil
 }
 
-func NewRepositoryMySQL(db *gorm.DB) users.Repository{
+func NewRepositoryMySQL(db *gorm.DB) users.Repository {
 	return &repositoryUsers{
 		DB: db,
 	}
