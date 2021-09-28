@@ -12,6 +12,6 @@
   },
   "jwt": {
     "secret": "supersecret12345!@#$%",
-    "expired": 1
+    "expired": 2
   }
 }

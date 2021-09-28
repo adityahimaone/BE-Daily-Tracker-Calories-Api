@@ -43,6 +43,8 @@ func main() {
 	e := echo.New()
 
 	//factory of domain
+	//authService := _middleware.NewService()
+
 	userRepository := _repositoryUsers.NewRepositoryMySQL(db)
 	userService := _serviceUsers.NewService(userRepository)
 	usersHandler := _handlerUsers.NewHandler(userService)

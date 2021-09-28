@@ -9,6 +9,7 @@ type Domain struct {
 	Password  string
 	Avatar    string
 	Gender    string
+	Token     string
 	CalorieID string
 	Calorie   int
 	CreatedAt time.Time
@@ -20,7 +21,7 @@ type Service interface {
 	IsEmailAvailable(email string) (bool, error)
 	Update(user *Domain) (*Domain, error)
 	FindByID(id int) (*Domain, error)
-	Login(username string, password string) (*Domain, error)
+	Login(user *Domain) (*Domain, error)
 }
 
 type Repository interface {
@@ -28,5 +29,5 @@ type Repository interface {
 	Update(user *Domain) (*Domain, error)
 	FindByID(id int) (*Domain, error)
 	FindByEmail(email string) (*Domain, error)
-	Login(username string, password string) (*Domain, error)
+	Login(user *Domain) (*Domain, error)
 }
