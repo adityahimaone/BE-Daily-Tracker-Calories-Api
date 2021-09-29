@@ -4,6 +4,7 @@ import (
 	"daily-tracker-calories/bussiness/users"
 	"errors"
 	"gorm.io/gorm"
+	"log"
 )
 
 type repositoryUsers struct {
@@ -20,6 +21,7 @@ func (repository repositoryUsers) Insert(user *users.Domain) (*users.Domain, err
 
 func (repository repositoryUsers) Update(id int, user *users.Domain) (*users.Domain, error) {
 	recordUser := fromDomain(*user)
+	log.Println(id)
 	if err := repository.DB.Where("id = ?", id).Updates(&recordUser).Error; err != nil {
 		return &users.Domain{}, err
 	}
@@ -32,16 +34,11 @@ func (repository repositoryUsers) Update(id int, user *users.Domain) (*users.Dom
 
 func (repository repositoryUsers) FindByID(id int) (*users.Domain, error) {
 	var recordUser Users
-	if err := repository.DB.Where("id = ?", id).Find(&recordUser).Error; err != nil {
+	if err := repository.DB.Where("id = ?", id).First(&recordUser).Error; err != nil {
 		return &users.Domain{}, err
 	}
 	result := toDomain(recordUser)
 	return &result, nil
-}
-
-func (repository repositoryUsers) FindByEmail(email string) (*users.Domain, error) {
-	//recorderUser := fromDomain(&Users.Email)
-	panic("implement me")
 }
 
 func (repository repositoryUsers) Login(email string, password string) (*users.Domain, error) {

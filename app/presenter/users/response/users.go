@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type UserRegister struct {
+type User struct {
 	ID        int       `json:"id"`
 	Name      string    `json:"name"`
 	Email     string    `json:"email"`
@@ -15,8 +15,8 @@ type UserRegister struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-func FromDomainRegister(domain users.Domain) UserRegister {
-	return UserRegister{
+func FromDomain(domain users.Domain) User {
+	return User{
 		ID:        domain.ID,
 		Name:      domain.Name,
 		Email:     domain.Email,
@@ -31,12 +31,4 @@ type UserLogin struct {
 	ID    int    `json:"id"`
 	Email string `json:"email"`
 	Token string `json:"token"`
-}
-
-func FromDomainLogin(domain users.Domain) UserLogin {
-	return UserLogin{
-		ID:    domain.ID,
-		Email: domain.Email,
-		Token: domain.Token,
-	}
 }

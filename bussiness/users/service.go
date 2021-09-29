@@ -1,8 +1,8 @@
 package users
 
 import (
+	"daily-tracker-calories/helper"
 	"errors"
-	"golang.org/x/crypto/bcrypt"
 	"log"
 )
 
@@ -17,27 +17,16 @@ func NewService(repositoryUser Repository) Service {
 }
 
 func (s *serviceUsers) RegisterUser(user *Domain) (*Domain, error) {
-	passwordHash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.MinCost)
+	passwordHash, err := helper.PasswordHash(user.Password)
 	if err != nil {
 		panic(err)
 	}
-	user.Password = string(passwordHash)
+	user.Password = passwordHash
 	result, err := s.repository.Insert(user)
 	if err != nil {
 		return &Domain{}, err
 	}
 	return result, nil
-}
-
-func (s *serviceUsers) IsEmailAvailable(email string) (bool, error) {
-	user, err := s.repository.FindByEmail(email)
-	if err != nil {
-		return false, err
-	}
-	if user.ID == 0 {
-		return true, nil
-	}
-	return false, nil
 }
 
 func (s *serviceUsers) Update(id int, user *Domain) (*Domain, error) {
@@ -64,8 +53,7 @@ func (s *serviceUsers) Login(email string, password string) (*Domain, error) {
 	if user.ID == 0 {
 		return user, errors.New("User Not Found")
 	}
-	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
-	if err != nil {
+	if !helper.ValidateHash(password, user.Password) {
 		return user, err
 	}
 	log.Println(user)
