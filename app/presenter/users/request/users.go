@@ -2,7 +2,7 @@ package request
 
 import "daily-tracker-calories/bussiness/users"
 
-type UserRegister struct {
+type User struct {
 	Name     string `json:"name"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
@@ -18,7 +18,7 @@ type UserLogin struct {
 	Password string `json:"password"`
 }
 
-func ToDomainRegister(request UserRegister) *users.Domain {
+func ToDomain(request User) *users.Domain {
 	return &users.Domain{
 		Name:     request.Name,
 		Email:    request.Email,

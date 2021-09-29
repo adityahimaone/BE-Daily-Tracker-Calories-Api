@@ -8,7 +8,6 @@ import (
 	"time"
 )
 
-
 type JwtCustomClaims struct {
 	ID int `json:"id"`
 	jwt.StandardClaims
