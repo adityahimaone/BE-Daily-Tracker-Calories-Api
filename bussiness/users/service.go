@@ -1,5 +1,11 @@
 package users
 
+import (
+	"errors"
+	"golang.org/x/crypto/bcrypt"
+	"log"
+)
+
 type serviceUsers struct {
 	repository Repository
 }
@@ -11,6 +17,11 @@ func NewService(repositoryUser Repository) Service {
 }
 
 func (s *serviceUsers) RegisterUser(user *Domain) (*Domain, error) {
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.MinCost)
+	if err != nil {
+		panic(err)
+	}
+	user.Password = string(passwordHash)
 	result, err := s.repository.Insert(user)
 	if err != nil {
 		return &Domain{}, err
@@ -42,9 +53,17 @@ func (s *serviceUsers) FindByID(id int) (*Domain, error) {
 }
 
 func (s *serviceUsers) Login(email string, password string) (*Domain, error) {
-	result, err := s.repository.Login(email, password)
+	user, err := s.repository.Login(email, password)
 	if err != nil {
 		return &Domain{}, err
 	}
-	return result, nil
+	if user.ID == 0 {
+		return user, errors.New("User Not Found")
+	}
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	if err != nil {
+		return user, err
+	}
+	log.Println(user)
+	return user, nil
 }

@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"errors"
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
@@ -9,21 +8,10 @@ import (
 	"time"
 )
 
-type Service interface {
-	GenerateToken(userID int) (string, error)
-	ValidateToken(token string) (*jwt.Token, error)
-}
-
-type jwtService struct {
-}
 
 type JwtCustomClaims struct {
 	ID int `json:"id"`
 	jwt.StandardClaims
-}
-
-func NewService() *jwtService {
-	return &jwtService{}
 }
 
 func init() {
@@ -41,31 +29,14 @@ func init() {
 	}
 }
 
-func (j *jwtService) GenerateToken(userID int) (string, error) {
+func CreateToken(userID int) (token string, err error) {
 	claims := jwt.MapClaims{}
-	claims["user_id"] = userID
+	claims["userid"] = userID
 	claims["exp"] = time.Now().Add(time.Hour * time.Duration(viper.GetInt(`jwt.expired`))).Unix()
 
 	initToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	token, err := initToken.SignedString([]byte(viper.GetString(`jwt.token`)))
-	if err != nil {
-		return token, err
-	}
-	return token, nil
-}
-
-func (j *jwtService) ValidateToken(encodedToken string) (*jwt.Token, error) {
-	token, err := jwt.Parse(encodedToken, func(token *jwt.Token) (interface{}, error) {
-		_, ok := token.Method.(*jwt.SigningMethodHMAC)
-		if !ok {
-			return nil, errors.New("Invalid Token")
-		}
-		return []byte(viper.GetString(`jwt.token`)), nil
-	})
-	if err != nil {
-		return token, err
-	}
-	return token, nil
+	token, err = initToken.SignedString([]byte(viper.GetString(`jwt.token`)))
+	return
 }
 
 func GetUser(c echo.Context) *JwtCustomClaims {
