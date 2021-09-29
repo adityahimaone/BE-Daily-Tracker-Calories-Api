@@ -19,14 +19,14 @@ type Domain struct {
 type Service interface {
 	RegisterUser(user *Domain) (*Domain, error)
 	IsEmailAvailable(email string) (bool, error)
-	Update(user *Domain) (*Domain, error)
+	Update(id int, user *Domain) (*Domain, error)
 	FindByID(id int) (*Domain, error)
 	Login(email string, password string) (*Domain, error)
 }
 
 type Repository interface {
 	Insert(user *Domain) (*Domain, error)
-	Update(user *Domain) (*Domain, error)
+	Update(id int, user *Domain) (*Domain, error)
 	FindByID(id int) (*Domain, error)
 	FindByEmail(email string) (*Domain, error)
 	Login(email string, password string) (*Domain, error)

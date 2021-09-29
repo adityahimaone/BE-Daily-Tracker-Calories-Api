@@ -6,7 +6,6 @@ import (
 	_response "daily-tracker-calories/app/presenter/users/response"
 	"daily-tracker-calories/bussiness/users"
 	"daily-tracker-calories/helper"
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"net/http"
 	"strconv"
@@ -47,13 +46,12 @@ func (handler *Presenter) LoginUser(echoContext echo.Context) error {
 	}
 	domain := _request.ToDomainLogin(req)
 	resp, err := handler.serviceUser.Login(domain.Email, domain.Password)
-	token, err := auth.CreateToken(domain.ID)
+	token, err := auth.CreateToken(resp.ID)
+	resp.Token = token
 	if err != nil {
 		response := helper.APIResponse("Failed Login", http.StatusBadRequest, "Error", nil)
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
-	resp.Token = token
-	fmt.Println(resp.ID)
 	if err != nil {
 		response := helper.APIResponse("Generate Token Failed", http.StatusBadRequest, "Error", nil)
 		return echoContext.JSON(http.StatusBadRequest, response)
@@ -62,6 +60,17 @@ func (handler *Presenter) LoginUser(echoContext echo.Context) error {
 	response := helper.APIResponse("Success Login", http.StatusOK, "Success", _response.FromDomainLogin(*resp))
 	return echoContext.JSON(http.StatusOK, response)
 }
+
+/*func (handler *Presenter) UpdateUser (echoContext echo.Context) error{
+	var req _request.UserRegister
+	if err := echoContext.Bind(&req); err != nil {
+		response := helper.APIResponse("Failed Login", http.StatusBadRequest, "Error", nil)
+		return echoContext.JSON(http.StatusBadRequest, response)
+	}
+	domain := _request.ToDomainRegister(req)
+	id := auth.GetUser(echoContext.Bind("userid"))
+	resp, err := handler.serviceUser.Update(id, domain)
+}*/
 
 func (handler *Presenter) FindByID(echoContext echo.Context) error {
 	id, _ := strconv.Atoi(echoContext.Param("id"))

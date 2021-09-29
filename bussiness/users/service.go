@@ -40,8 +40,12 @@ func (s *serviceUsers) IsEmailAvailable(email string) (bool, error) {
 	return false, nil
 }
 
-func (s *serviceUsers) Update(user *Domain) (*Domain, error) {
-	panic("implement me")
+func (s *serviceUsers) Update(id int, user *Domain) (*Domain, error) {
+	result, err := s.repository.Update(id, user)
+	if err != nil {
+		return &Domain{}, err
+	}
+	return result, nil
 }
 
 func (s *serviceUsers) FindByID(id int) (*Domain, error) {
