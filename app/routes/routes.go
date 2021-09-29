@@ -13,4 +13,5 @@ func (handler *HandlerList) RouteRegister(e *echo.Echo) {
 	users := e.Group("/api/v1")
 	users.POST("/users/register", handler.UserHandler.RegisterUser)
 	users.POST("/users/login", handler.UserHandler.LoginUser)
+	users.GET("/users/:id", handler.UserHandler.FindByID)
 }
