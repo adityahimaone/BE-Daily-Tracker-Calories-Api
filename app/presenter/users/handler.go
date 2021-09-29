@@ -6,15 +6,14 @@ import (
 	_response "daily-tracker-calories/app/presenter/users/response"
 	"daily-tracker-calories/bussiness/users"
 	"daily-tracker-calories/helper"
+	"fmt"
 	"github.com/labstack/echo/v4"
-	"golang.org/x/crypto/bcrypt"
 	"net/http"
 	"strconv"
 )
 
 type Presenter struct {
 	serviceUser users.Service
-	authService auth.Service
 }
 
 func NewHandler(userService users.Service) *Presenter {
@@ -29,17 +28,11 @@ func (handler *Presenter) RegisterUser(echoContext echo.Context) error {
 		response := helper.APIResponse("Failed Register", http.StatusBadRequest, "Error", nil)
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
-	// hash password
-	passwordHash, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.MinCost)
-	if err != nil {
-		panic(err)
-	}
-	req.Password = string(passwordHash)
 	domain := _request.ToDomainRegister(req)
 	resp, err := handler.serviceUser.RegisterUser(domain)
 	if err != nil {
-		response := helper.APIResponse("Failed Register", http.StatusBadRequest, "Error", nil)
-		return echoContext.JSON(http.StatusBadRequest, response)
+		response := helper.APIResponse("Failed Register", http.StatusInternalServerError, "Error", nil)
+		return echoContext.JSON(http.StatusInternalServerError, response)
 	}
 
 	response := helper.APIResponse("Success Register User", http.StatusOK, "Success", _response.FromDomainRegister(*resp))
@@ -52,14 +45,17 @@ func (handler *Presenter) LoginUser(echoContext echo.Context) error {
 		response := helper.APIResponse("Failed Login", http.StatusBadRequest, "Error", nil)
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
-
 	domain := _request.ToDomainLogin(req)
-	//token, err := handler.authService.GenerateToken(domain.ID)
-	resp, err := handler.serviceUser.Login(domain.Email,domain.Password)
-	//resp.Token = token
-	//resp.Token = token
+	resp, err := handler.serviceUser.Login(domain.Email, domain.Password)
+	token, err := auth.CreateToken(domain.ID)
 	if err != nil {
 		response := helper.APIResponse("Failed Login", http.StatusBadRequest, "Error", nil)
+		return echoContext.JSON(http.StatusBadRequest, response)
+	}
+	resp.Token = token
+	fmt.Println(resp.ID)
+	if err != nil {
+		response := helper.APIResponse("Generate Token Failed", http.StatusBadRequest, "Error", nil)
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
 
