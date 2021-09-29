@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
+	"strconv"
 )
 
 type Presenter struct {
@@ -53,9 +54,9 @@ func (handler *Presenter) LoginUser(echoContext echo.Context) error {
 	}
 
 	domain := _request.ToDomainLogin(req)
-
-	resp, err := handler.serviceUser.Login(domain)
-	//token, err := handler.authService.GenerateToken(resp.ID)
+	//token, err := handler.authService.GenerateToken(domain.ID)
+	resp, err := handler.serviceUser.Login(domain.Email,domain.Password)
+	//resp.Token = token
 	//resp.Token = token
 	if err != nil {
 		response := helper.APIResponse("Failed Login", http.StatusBadRequest, "Error", nil)
@@ -63,5 +64,16 @@ func (handler *Presenter) LoginUser(echoContext echo.Context) error {
 	}
 
 	response := helper.APIResponse("Success Login", http.StatusOK, "Success", _response.FromDomainLogin(*resp))
+	return echoContext.JSON(http.StatusOK, response)
+}
+
+func (handler *Presenter) FindByID(echoContext echo.Context) error {
+	id, _ := strconv.Atoi(echoContext.Param("id"))
+	resp, err := handler.serviceUser.FindByID(id)
+	if err != nil {
+		response := helper.APIResponse("Failed", http.StatusBadRequest, "Error", nil)
+		return echoContext.JSON(http.StatusBadRequest, response)
+	}
+	response := helper.APIResponse("Success", http.StatusOK, "Success", _response.FromDomainRegister(*resp))
 	return echoContext.JSON(http.StatusOK, response)
 }

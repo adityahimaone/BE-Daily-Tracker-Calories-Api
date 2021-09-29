@@ -22,16 +22,22 @@ func (repository repositoryUsers) Update(user *users.Domain) (*users.Domain, err
 }
 
 func (repository repositoryUsers) FindByID(id int) (*users.Domain, error) {
-	panic("implement me")
+	var recordUser Users
+	if err := repository.DB.Where("id = ?", id).Find(&recordUser).Error; err != nil {
+		return &users.Domain{}, err
+	}
+	result := toDomain(recordUser)
+	return &result, nil
 }
 
 func (repository repositoryUsers) FindByEmail(email string) (*users.Domain, error) {
+	//recorderUser := fromDomain(&Users.Email)
 	panic("implement me")
 }
 
-func (repository repositoryUsers) Login(user *users.Domain) (*users.Domain, error) {
-	recordUser := fromDomain(*user)
-	if err := repository.DB.Where("email = ? & password ?", recordUser.Email, recordUser.Password).Error; err != nil {
+func (repository repositoryUsers) Login(email string, password string) (*users.Domain, error) {
+	var recordUser Users
+	if err := repository.DB.Where("email = ? AND password = ?", email, password).Find(&recordUser).Error; err != nil {
 		return &users.Domain{}, err
 	}
 	result := toDomain(recordUser)

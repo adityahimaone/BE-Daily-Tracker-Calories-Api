@@ -21,7 +21,7 @@ type Service interface {
 	IsEmailAvailable(email string) (bool, error)
 	Update(user *Domain) (*Domain, error)
 	FindByID(id int) (*Domain, error)
-	Login(user *Domain) (*Domain, error)
+	Login(email string, password string) (*Domain, error)
 }
 
 type Repository interface {
@@ -29,5 +29,5 @@ type Repository interface {
 	Update(user *Domain) (*Domain, error)
 	FindByID(id int) (*Domain, error)
 	FindByEmail(email string) (*Domain, error)
-	Login(user *Domain) (*Domain, error)
+	Login(email string, password string) (*Domain, error)
 }

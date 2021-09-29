@@ -7,6 +7,7 @@ import (
 
 type Users struct {
 	gorm.Model
+	ID       uint `gorm:"primaryKey"`
 	Name     string
 	Email    string
 	Password string
@@ -29,6 +30,7 @@ func toDomain(record Users) users.Domain {
 
 func fromDomain(domain users.Domain) Users {
 	return Users{
+		ID:       uint(domain.ID),
 		Name:     domain.Name,
 		Email:    domain.Email,
 		Password: domain.Password,

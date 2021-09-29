@@ -19,7 +19,14 @@ func (s *serviceUsers) RegisterUser(user *Domain) (*Domain, error) {
 }
 
 func (s *serviceUsers) IsEmailAvailable(email string) (bool, error) {
-	panic("implement me")
+	user, err := s.repository.FindByEmail(email)
+	if err != nil {
+		return false, err
+	}
+	if user.ID == 0 {
+		return true, nil
+	}
+	return false, nil
 }
 
 func (s *serviceUsers) Update(user *Domain) (*Domain, error) {
@@ -27,11 +34,15 @@ func (s *serviceUsers) Update(user *Domain) (*Domain, error) {
 }
 
 func (s *serviceUsers) FindByID(id int) (*Domain, error) {
-	panic("implement me")
+	user, err := s.repository.FindByID(id)
+	if err != nil {
+		return &Domain{}, err
+	}
+	return user, nil
 }
 
-func (s *serviceUsers) Login(user *Domain) (*Domain, error) {
-	result, err := s.repository.Login(user)
+func (s *serviceUsers) Login(email string, password string) (*Domain, error) {
+	result, err := s.repository.Login(email, password)
 	if err != nil {
 		return &Domain{}, err
 	}
