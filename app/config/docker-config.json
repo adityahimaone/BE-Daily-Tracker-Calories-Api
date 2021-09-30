@@ -4,7 +4,7 @@
     "address": ":8080"
   },
   "database": {
-    "host": "127.0.0.1",
+    "host": "mysql_server",
     "port": "3306",
     "user": "root",
     "pass": "",

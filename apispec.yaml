@@ -13,8 +13,8 @@ tags:
     description: food resource
   - name: histories
     description: histories resource
-  - name: calorie
-    description: calorie resource
+  - name: calories
+    description: calories resource
 paths:
   /food:
     post:
@@ -295,7 +295,7 @@ paths:
   /calorie:
     post:
       tags:
-        - calorie
+        - calories
       summary: Count Calorie
       description: This can only be done by the logged in user.
       operationId: createCalorie

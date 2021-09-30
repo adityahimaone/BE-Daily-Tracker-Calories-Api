@@ -6,7 +6,10 @@ import (
 	_response "daily-tracker-calories/app/presenter/users/response"
 	"daily-tracker-calories/bussiness/users"
 	"daily-tracker-calories/helper"
+	"fmt"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
+	"github.com/spf13/viper"
 	"log"
 	"net/http"
 	"strconv"
@@ -14,11 +17,13 @@ import (
 
 type Presenter struct {
 	serviceUser users.Service
+	jwtAuth     *auth.ConfigJWT
 }
 
-func NewHandler(userService users.Service) *Presenter {
+func NewHandler(userService users.Service, jwtauth *auth.ConfigJWT) *Presenter {
 	return &Presenter{
 		serviceUser: userService,
+		jwtAuth:     jwtauth,
 	}
 }
 
@@ -45,12 +50,21 @@ func (handler *Presenter) LoginUser(echoContext echo.Context) error {
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
 	resp, err := handler.serviceUser.Login(req.Email, req.Password)
-	token, err := auth.CreateToken(resp.ID)
+	token := handler.jwtAuth.GenerateToken(resp.ID)
 	resp.Token = token
+	mapToken, _ := extractClaims(token)
+	id := mapToken["id"]
+	fmt.Println(id)
 	if err != nil {
 		response := helper.APIResponse("Failed Login", http.StatusBadRequest, "Error", nil)
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
+
+	if resp.ID == 0 {
+		response := helper.APIResponse("ID Not Found", http.StatusBadRequest, "Error", nil)
+		return echoContext.JSON(http.StatusBadRequest, response)
+	}
+
 	if err != nil {
 		response := helper.APIResponse("Generate Token Failed", http.StatusBadRequest, "Error", nil)
 		return echoContext.JSON(http.StatusBadRequest, response)
@@ -67,9 +81,9 @@ func (handler *Presenter) UpdateUser(echoContext echo.Context) error {
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
 	domain := _request.ToDomain(req)
-	user := auth.GetUser(echoContext)
-	log.Println(user.ID)
-	resp, err := handler.serviceUser.Update(user.ID, domain)
+	user := auth.GetUser(echoContext) // ID Get From JWT
+	userID := user.ID
+	resp, err := handler.serviceUser.Update(userID, domain)
 	if err != nil {
 		response := helper.APIResponse("Failed", http.StatusBadRequest, "Error", nil)
 		return echoContext.JSON(http.StatusBadRequest, response)
@@ -91,4 +105,24 @@ func (handler *Presenter) FindByID(echoContext echo.Context) error {
 	}
 	response := helper.APIResponse("Success", http.StatusOK, "Success", _response.FromDomain(*resp))
 	return echoContext.JSON(http.StatusOK, response)
+}
+
+func extractClaims(tokenStr string) (jwt.MapClaims, bool) {
+	hmacSecretString := viper.GetString(`jwt.token`)
+	hmacSecret := []byte(hmacSecretString)
+	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
+		// check token signing method etc
+		return hmacSecret, nil
+	})
+
+	if err != nil {
+		return nil, false
+	}
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		return claims, true
+	} else {
+		log.Printf("Invalid JWT Token")
+		return nil, false
+	}
 }

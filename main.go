@@ -2,10 +2,14 @@ package main
 
 import (
 	_middleware "daily-tracker-calories/app/middleware"
+	"daily-tracker-calories/app/middleware/auth"
+	"daily-tracker-calories/app/presenter/calories"
 	_handlerUsers "daily-tracker-calories/app/presenter/users"
 	"daily-tracker-calories/app/routes"
+	_serviceCalories "daily-tracker-calories/bussiness/calories"
 	_serviceUsers "daily-tracker-calories/bussiness/users"
 	mysqlRepo "daily-tracker-calories/repository/mysql"
+	_repositoryCalories "daily-tracker-calories/repository/mysql/calories"
 	_repositoryUsers "daily-tracker-calories/repository/mysql/users"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
@@ -37,6 +41,11 @@ func main() {
 		DBDatabase: viper.GetString(`database.name`),
 	}
 
+	configJWT := auth.ConfigJWT{
+		SecretJWT:       viper.GetString(`jwt.secret`),
+		ExpiresDuration: viper.GetInt(`jwt.expired`),
+	}
+
 	db := configDB.IntialDB()
 	mysqlRepo.MigrateDB(db)
 
@@ -44,14 +53,19 @@ func main() {
 
 	//factory of domain
 	//authService := _middleware.NewService()
-
 	userRepository := _repositoryUsers.NewRepositoryMySQL(db)
 	userService := _serviceUsers.NewService(userRepository)
-	usersHandler := _handlerUsers.NewHandler(userService)
+	usersHandler := _handlerUsers.NewHandler(userService, &configJWT)
+
+	calorieRepository := _repositoryCalories.NewRepositoryMySQL(db)
+	calorieService := _serviceCalories.NewService(calorieRepository)
+	calorieHandler := calories.NewHandler(calorieService)
 
 	// initial of routes
 	routesInit := routes.HandlerList{
-		UserHandler: *usersHandler,
+		JWTMiddleware:  configJWT.Init(),
+		UserHandler:    *usersHandler,
+		CalorieHandler: *calorieHandler,
 	}
 	routesInit.RouteRegister(e)
 	_middleware.LogMiddleware(e)

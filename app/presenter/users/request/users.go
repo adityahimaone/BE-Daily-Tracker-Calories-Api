@@ -26,10 +26,3 @@ func ToDomain(request User) *users.Domain {
 		Gender:   request.Gender,
 	}
 }
-
-func ToDomainLogin(request UserLogin) *users.Domain {
-	return &users.Domain{
-		Email:    request.Email,
-		Password: request.Password,
-	}
-}

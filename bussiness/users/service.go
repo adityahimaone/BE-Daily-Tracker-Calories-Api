@@ -2,8 +2,6 @@ package users
 
 import (
 	"daily-tracker-calories/helper"
-	"errors"
-	"log"
 )
 
 type serviceUsers struct {
@@ -30,6 +28,11 @@ func (s *serviceUsers) RegisterUser(user *Domain) (*Domain, error) {
 }
 
 func (s *serviceUsers) Update(id int, user *Domain) (*Domain, error) {
+	passwordHash, err := helper.PasswordHash(user.Password)
+	if err != nil {
+		panic(err)
+	}
+	user.Password = passwordHash
 	result, err := s.repository.Update(id, user)
 	if err != nil {
 		return &Domain{}, err
@@ -50,12 +53,11 @@ func (s *serviceUsers) Login(email string, password string) (*Domain, error) {
 	if err != nil {
 		return &Domain{}, err
 	}
-	if user.ID == 0 {
-		return user, errors.New("User Not Found")
-	}
 	if !helper.ValidateHash(password, user.Password) {
 		return user, err
 	}
-	log.Println(user)
+	if user.ID == 0 {
+		return &Domain{}, err
+	}
 	return user, nil
 }
