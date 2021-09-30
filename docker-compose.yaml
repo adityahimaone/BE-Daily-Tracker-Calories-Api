@@ -1,0 +1,8 @@
+version : '3'
+
+services:
+  daily-tracker-calories:
+    build: .
+    restart: "no"
+    ports:
+      - 8000:8080

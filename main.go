@@ -2,6 +2,7 @@ package main
 
 import (
 	_middleware "daily-tracker-calories/app/middleware"
+	"daily-tracker-calories/app/middleware/auth"
 	_handlerUsers "daily-tracker-calories/app/presenter/users"
 	"daily-tracker-calories/app/routes"
 	_serviceUsers "daily-tracker-calories/bussiness/users"
@@ -37,6 +38,12 @@ func main() {
 		DBDatabase: viper.GetString(`database.name`),
 	}
 
+	configJWT := auth.ConfigJWT{
+		SecretJWT:       viper.GetString(`jwt.secret`),
+		ExpiresDuration: viper.GetInt(`jwt.expired`),
+	}
+
+
 	db := configDB.IntialDB()
 	mysqlRepo.MigrateDB(db)
 
@@ -47,10 +54,11 @@ func main() {
 
 	userRepository := _repositoryUsers.NewRepositoryMySQL(db)
 	userService := _serviceUsers.NewService(userRepository)
-	usersHandler := _handlerUsers.NewHandler(userService)
+	usersHandler := _handlerUsers.NewHandler(userService, &configJWT)
 
 	// initial of routes
 	routesInit := routes.HandlerList{
+		JWTMiddleware: configJWT.Init(),
 		UserHandler: *usersHandler,
 	}
 	routesInit.RouteRegister(e)
