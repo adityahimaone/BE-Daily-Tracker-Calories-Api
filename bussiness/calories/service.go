@@ -10,15 +10,15 @@ func NewService(repositoryCalorie Repository) Service {
 	}
 }
 
-func (s serviceCalorie) CountCalorie(user *Domain) (*Domain, error) {
-	activityValue := user.ActivityType
-	weight := user.Weight
+func (s *serviceCalorie) CountCalorie(calorie *Domain) (*Domain, error) {
+	activityValue := calorie.ActivityType
+	weight := calorie.Weight
 	weightFloat := float64(weight)
-	height := user.Height
+	height := calorie.Height
 	heightFloat := float64(height)
-	age := user.Age
+	age := calorie.Age
 	ageFloat := float64(age)
-	gender := user.Gender
+	gender := calorie.Gender
 	valueActivity := 0.0
 	calories := 0.0
 	switch activityValue {
@@ -36,14 +36,18 @@ func (s serviceCalorie) CountCalorie(user *Domain) (*Domain, error) {
 		valueActivity = 1.0
 	}
 	if gender == "male" {
-		calories = (10 * weightFloat) + (6.25 * heightFloat) - (5 * ageFloat) * valueActivity
-	}else {
+		calories = (10 * weightFloat) + (6.25 * heightFloat) - (5*ageFloat)*valueActivity
+	} else {
 		calories = ((10 * weightFloat) + (6.25 * heightFloat) - (5 * ageFloat) - 161) * valueActivity
 	}
-	user.Calorie = calories
-	return nil, nil
+	calorie.Calorie = calories
+	return &Domain{}, nil
 }
 
-func (s serviceCalorie) Create(user *Domain) (*Domain, error) {
+func (s serviceCalorie) CreateCalorie(user *Domain) (*Domain, error) {
+	panic("implement me")
+}
+
+func (s *serviceCalorie) UpdateCalorie(calorie *Domain) (*Domain, error) {
 	panic("implement me")
 }

@@ -38,7 +38,7 @@ func (jwtConf *ConfigJWT) GenerateToken(userID int) string {
 		},
 	}
 
-	// Create token with claims
+	// CreateCalorie token with claims
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	token, _ := t.SignedString([]byte(jwtConf.SecretJWT))
 
