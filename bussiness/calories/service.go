@@ -44,8 +44,12 @@ func (s *serviceCalorie) CountCalorie(calorie *Domain) (*Domain, error) {
 	return &Domain{}, nil
 }
 
-func (s serviceCalorie) CreateCalorie(user *Domain) (*Domain, error) {
-	panic("implement me")
+func (s serviceCalorie) CreateCalorie(calorie *Domain) (*Domain, error) {
+	result, err := s.repository.Insert(calorie)
+	if err != nil {
+		return &Domain{}, err
+	}
+	return result, nil
 }
 
 func (s *serviceCalorie) UpdateCalorie(calorie *Domain) (*Domain, error) {

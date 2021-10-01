@@ -8,6 +8,7 @@ type Domain struct {
 	Age          int
 	ActivityType int
 	Calorie      float64
+	UserID       int
 }
 
 type Service interface {

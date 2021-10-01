@@ -16,7 +16,12 @@ func NewRepositoryMySQL(db *gorm.DB) calories.Repository {
 }
 
 func (r repositoryUsers) Insert(calorie *calories.Domain) (*calories.Domain, error) {
-	panic("implement me")
+	recordCalorie := fromDomain(*calorie)
+	if err := r.DB.Create(&recordCalorie).Error; err != nil {
+		return &calories.Domain{}, err
+	}
+	result := toDomain(recordCalorie)
+	return &result, nil
 }
 
 func (r repositoryUsers) Update(calorie *calories.Domain) (*calories.Domain, error) {
