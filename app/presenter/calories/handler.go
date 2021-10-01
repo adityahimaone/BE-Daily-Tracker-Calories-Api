@@ -1,6 +1,7 @@
 package calories
 
 import (
+	"daily-tracker-calories/app/middleware/auth"
 	_request "daily-tracker-calories/app/presenter/calories/request"
 	_response "daily-tracker-calories/app/presenter/calories/response"
 	"daily-tracker-calories/bussiness/calories"
@@ -34,5 +35,31 @@ func (handler *Presenter) CountCalorie(echoContext echo.Context) error {
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
 	response := helper.APIResponse("Success Get Calorie", http.StatusOK, "Success", _response.CalorieResult{ResultCalorie: domain.Calorie})
+	return echoContext.JSON(http.StatusOK, response)
+}
+
+func (handler *Presenter) SaveCalorie(echoContext echo.Context) error {
+	req := _request.Calorie{}
+	if err := echoContext.Bind(&req); err != nil {
+		response := helper.APIResponse("Failed", http.StatusBadRequest, "Error", err)
+		return echoContext.JSON(http.StatusBadRequest, response)
+	}
+	domain := _request.ToDomain(req)
+	_, err := handler.serviceCalorie.CountCalorie(domain)
+	log.Println("1", domain)
+	if err != nil {
+		response := helper.APIResponse("Failed Get Calorie", http.StatusBadRequest, "Error", err)
+		return echoContext.JSON(http.StatusBadRequest, response)
+	}
+	user := auth.GetUser(echoContext) // ID Get From JWT
+	userID := user.ID
+	domain.UserID = userID
+	resp, err := handler.serviceCalorie.CreateCalorie(domain)
+	log.Println("2", domain)
+	if err != nil {
+		response := helper.APIResponse("Failed Get Calorie", http.StatusBadRequest, "Error", err)
+		return echoContext.JSON(http.StatusBadRequest, response)
+	}
+	response := helper.APIResponse("Success Get Calorie", http.StatusOK, "Success", _response.FromDomain(*resp))
 	return echoContext.JSON(http.StatusOK, response)
 }
