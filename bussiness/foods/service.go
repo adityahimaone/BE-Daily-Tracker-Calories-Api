@@ -11,7 +11,11 @@ func NewService(repositoryFood Repository) Service {
 }
 
 func (s serviceFoods) GetFoodByName(name string) (*Domain, error) {
-	panic("implement me")
+	result, err := s.repository.GetFoodByName(name)
+	if err != nil {
+		return &Domain{}, err
+	}
+	return result, nil
 }
 
 func (s serviceFoods) GetFoodAPI(food *Domain) (*Domain, error) {

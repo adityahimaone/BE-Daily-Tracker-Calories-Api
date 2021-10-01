@@ -37,7 +37,7 @@ func (repository repositoryUsers) Update(id int, user *users.Domain) (*users.Dom
 }
 
 func (repository repositoryUsers) FindByID(id int) (*users.Domain, error) {
-	var recordUser Users
+	recordUser := Users{}
 	if err := repository.DB.Where("id = ?", id).First(&recordUser).Error; err != nil {
 		return &users.Domain{}, err
 	}

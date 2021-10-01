@@ -29,4 +29,5 @@ func (handler *HandlerList) RouteRegister(e *echo.Echo) {
 
 	//food endpoint
 	group.POST("/food/save", handler.FoodHandler.SaveFood)
+	group.GET("/food/", handler.FoodHandler.GetFoodByName)
 }

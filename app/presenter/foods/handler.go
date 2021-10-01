@@ -31,6 +31,17 @@ func (handler *Presenter) SaveFood(echoContext echo.Context) error {
 		response := helper.APIResponse("Failed Save Food", http.StatusBadRequest, "Error", err)
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
-	response := helper.APIResponse("Success Register User", http.StatusOK, "Success", _response.FromDomain(*resp))
+	response := helper.APIResponse("Success Save Food", http.StatusOK, "Success", _response.FromDomain(*resp))
+	return echoContext.JSON(http.StatusBadRequest, response)
+}
+
+func (handler *Presenter) GetFoodByName(echoContext echo.Context) error {
+	name := echoContext.QueryParam("name")
+	resp, err := handler.serviceFood.GetFoodByName(name)
+	if err != nil {
+		response := helper.APIResponse("Failed Get Food", http.StatusBadRequest, "Error", err)
+		return echoContext.JSON(http.StatusBadRequest, response)
+	}
+	response := helper.APIResponse("Success", http.StatusOK, "Success", _response.FromDomain(*resp))
 	return echoContext.JSON(http.StatusBadRequest, response)
 }
