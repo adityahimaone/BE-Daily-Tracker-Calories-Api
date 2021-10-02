@@ -3,6 +3,7 @@ package routes
 import (
 	"daily-tracker-calories/app/presenter/calories"
 	"daily-tracker-calories/app/presenter/foods"
+	"daily-tracker-calories/app/presenter/histories"
 	"daily-tracker-calories/app/presenter/users"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -13,6 +14,7 @@ type HandlerList struct {
 	JWTMiddleware  middleware.JWTConfig
 	CalorieHandler calories.Presenter
 	FoodHandler    foods.Presenter
+	HistoriesHandler histories.Presenter
 }
 
 func (handler *HandlerList) RouteRegister(e *echo.Echo) {
@@ -35,4 +37,7 @@ func (handler *HandlerList) RouteRegister(e *echo.Echo) {
 	group.GET("/food", handler.FoodHandler.GetAllFood)
 	group.GET("/food/:id", handler.FoodHandler.GetFoodByID)
 	group.DELETE("/food/:id", handler.FoodHandler.DeleteFood)
+
+	//histories
+	group.POST("/histories/create", handler.HistoriesHandler.CreateHistory, middleware.JWTWithConfig(handler.JWTMiddleware))
 }

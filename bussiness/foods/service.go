@@ -10,7 +10,7 @@ func NewService(repositoryFood Repository) Service {
 	}
 }
 
-func (s serviceFoods) GetFoodByID(id int) (*Domain, error) {
+func (s *serviceFoods) GetFoodByID(id int) (*Domain, error) {
 	result, err := s.repository.GetFoodByID(id)
 	if err != nil {
 		return &Domain{}, err
@@ -18,7 +18,7 @@ func (s serviceFoods) GetFoodByID(id int) (*Domain, error) {
 	return result, nil
 }
 
-func (s serviceFoods) GetFoodByName(name string) (*Domain, error) {
+func (s *serviceFoods) GetFoodByName(name string) (*Domain, error) {
 	result, err := s.repository.GetFoodByName(name)
 	if err != nil {
 		return &Domain{}, err
@@ -26,11 +26,11 @@ func (s serviceFoods) GetFoodByName(name string) (*Domain, error) {
 	return result, nil
 }
 
-func (s serviceFoods) GetFoodAPI(food *Domain) (*Domain, error) {
+func (s *serviceFoods) GetFoodAPI(food *Domain) (*Domain, error) {
 	panic("implement me")
 }
 
-func (s serviceFoods) SaveFood(food *Domain) (*Domain, error) {
+func (s *serviceFoods) SaveFood(food *Domain) (*Domain, error) {
 	result, err := s.repository.Insert(food)
 	if err != nil {
 		return &Domain{}, err
@@ -38,7 +38,7 @@ func (s serviceFoods) SaveFood(food *Domain) (*Domain, error) {
 	return result, nil
 }
 
-func (s serviceFoods) GetAllFood() (*[]Domain, error) {
+func (s *serviceFoods) GetAllFood() (*[]Domain, error) {
 	result, err := s.repository.GetAllFood()
 	if err != nil {
 		return &[]Domain{}, err
@@ -46,7 +46,7 @@ func (s serviceFoods) GetAllFood() (*[]Domain, error) {
 	return result, nil
 }
 
-func (s serviceFoods) DeleteFood(id int, food *Domain) (*Domain, error) {
+func (s *serviceFoods) DeleteFood(id int, food *Domain) (*Domain, error) {
 	result, err := s.repository.Delete(id, food)
 	if err != nil {
 		return &Domain{}, err

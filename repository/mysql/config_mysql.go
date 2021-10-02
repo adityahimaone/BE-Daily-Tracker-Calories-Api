@@ -3,6 +3,7 @@ package mysql
 import (
 	"daily-tracker-calories/repository/mysql/calories"
 	"daily-tracker-calories/repository/mysql/foods"
+	"daily-tracker-calories/repository/mysql/histories"
 	"daily-tracker-calories/repository/mysql/users"
 	"fmt"
 	"gorm.io/driver/mysql"
@@ -38,4 +39,5 @@ func MigrateDB(db *gorm.DB) {
 	db.AutoMigrate(&users.Users{})
 	db.AutoMigrate(&calories.Calories{})
 	db.AutoMigrate(&foods.Foods{})
+	db.AutoMigrate(&histories.Histories{})
 }
