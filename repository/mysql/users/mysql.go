@@ -45,9 +45,9 @@ func (repository repositoryUsers) FindByID(id int) (*users.Domain, error) {
 	return &result, nil
 }
 
-func (repository repositoryUsers) Login(email string, password string) (*users.Domain, error) {
+func (repository repositoryUsers) FindByEmail(email string) (*users.Domain, error) {
 	recordUser := Users{}
-	if err := repository.DB.Where("email = ? AND password = ?", email, password).First(&recordUser).Error; err != nil {
+	if err := repository.DB.Where("email = ?", email).First(&recordUser).Error; err != nil {
 		return &users.Domain{}, err
 	}
 	result := toDomain(recordUser)

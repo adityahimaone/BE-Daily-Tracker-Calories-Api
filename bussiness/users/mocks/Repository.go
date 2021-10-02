@@ -60,7 +60,7 @@ func (_m *Repository) Insert(user *users.Domain) (*users.Domain, error) {
 }
 
 // Login provides a mock function with given fields: email, password
-func (_m *Repository) Login(email string, password string) (*users.Domain, error) {
+func (_m *Repository) FindByEmail(email string, password string) (*users.Domain, error) {
 	ret := _m.Called(email, password)
 
 	var r0 *users.Domain

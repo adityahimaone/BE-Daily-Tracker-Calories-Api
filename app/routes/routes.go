@@ -22,6 +22,7 @@ func (handler *HandlerList) RouteRegister(e *echo.Echo) {
 	group.PUT("/users/update", handler.UserHandler.UpdateUser, middleware.JWTWithConfig(handler.JWTMiddleware))
 	group.POST("/users/login", handler.UserHandler.LoginUser)
 	group.GET("/users/:id", handler.UserHandler.FindByID)
+	group.POST("/users/avatars", handler.UserHandler.UploudAvatar, middleware.JWTWithConfig(handler.JWTMiddleware))
 
 	//calorie endpoint
 	group.POST("/calorie/count", handler.CalorieHandler.CountCalorie)
@@ -31,4 +32,5 @@ func (handler *HandlerList) RouteRegister(e *echo.Echo) {
 	group.POST("/food/save", handler.FoodHandler.SaveFood)
 	group.GET("/food/", handler.FoodHandler.GetFoodByName)
 	group.GET("/food", handler.FoodHandler.GetAllFood)
+	group.GET("/food/:id", handler.FoodHandler.GetFoodByID)
 }

@@ -7,6 +7,7 @@ import (
 	"daily-tracker-calories/helper"
 	"github.com/labstack/echo/v4"
 	"net/http"
+	"strconv"
 )
 
 type Presenter struct {
@@ -53,5 +54,20 @@ func (handler *Presenter) GetAllFood(echoContext echo.Context) error {
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
 	response := helper.APIResponse("Success", http.StatusOK, "Success", _response.FromDomainArray(*resp))
+	return echoContext.JSON(http.StatusBadRequest, response)
+}
+
+func (handler *Presenter) GetFoodByID(echoContext echo.Context) error {
+	id, err := strconv.Atoi(echoContext.Param("id"))
+	if err != nil {
+		response := helper.APIResponse("Failed Get Food", http.StatusBadRequest, "Error", err)
+		return echoContext.JSON(http.StatusBadRequest, response)
+	}
+	resp, err := handler.serviceFood.GetFoodByID(id)
+	if err != nil {
+		response := helper.APIResponse("Failed Get Food", http.StatusBadRequest, "Error", err)
+		return echoContext.JSON(http.StatusBadRequest, response)
+	}
+	response := helper.APIResponse("Success", http.StatusOK, "Success", _response.FromDomain(*resp))
 	return echoContext.JSON(http.StatusBadRequest, response)
 }

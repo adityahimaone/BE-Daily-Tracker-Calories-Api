@@ -34,8 +34,8 @@ func TestGetByID(t *testing.T) {
 		assert.Nil(t, err)
 		assert.Equal(t, domainTest.ID, result.ID)
 	})
-	t.Run("Valid Test Login", func(t *testing.T) {
-		userRepository.On("Login", mock.Anything, mock.Anything).Return(&domainTest, nil).Once()
+	t.Run("Valid Test FindByEmail", func(t *testing.T) {
+		userRepository.On("FindByEmail", mock.Anything, mock.Anything).Return(&domainTest, nil).Once()
 		result, err := userService.Login("test@mail.com", "secret")
 		assert.Nil(t, err)
 		assert.Equal(t, domainTest.ID, result.ID)
