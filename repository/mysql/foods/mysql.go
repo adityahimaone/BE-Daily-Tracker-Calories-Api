@@ -26,7 +26,7 @@ func (repository repositoryFoods) GetFoodByID(id int) (*foods.Domain, error) {
 
 func (repository repositoryFoods) GetFoodByName(name string) (*foods.Domain, error) {
 	recordFood := Foods{}
-	if err := repository.DB.Where("name = ?", name).First(&recordFood).Error; err != nil {
+	if err := repository.DB.Where("name LIKE ?", "%"+name+"%").First(&recordFood).Error; err != nil {
 		return &foods.Domain{}, err
 	}
 	result := toDomain(recordFood)

@@ -50,7 +50,7 @@ func (s *serviceCalorie) CountCalorie(calorie *Domain) (*Domain, error) {
 	return &Domain{}, nil
 }
 
-func (s serviceCalorie) CreateCalorie(calorie *Domain, idUser int) (*Domain, error) {
+func (s *serviceCalorie) CreateCalorie(calorie *Domain, idUser int) (*Domain, error) {
 	calorie.UserID = idUser
 	_, err := s.CountCalorie(calorie)
 	if err != nil {
