@@ -27,5 +27,5 @@ type Repository interface {
 	Insert(user *Domain) (*Domain, error)
 	Update(id int, user *Domain) (*Domain, error)
 	FindByID(id int) (*Domain, error)
-	Login(email string, password string) (*Domain, error)
+	FindByEmail(email string) (*Domain, error)
 }
