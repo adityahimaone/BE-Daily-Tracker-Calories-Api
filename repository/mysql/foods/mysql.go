@@ -50,3 +50,12 @@ func (repository repositoryFoods) GetAllFood() (*[]foods.Domain, error) {
 	result := toDomainArray(recordFood)
 	return &result, nil
 }
+
+func (repository repositoryFoods) Delete(id int, food *foods.Domain) (*foods.Domain, error) {
+	recordFood := fromDomain(*food)
+	if err := repository.DB.Where("id = ?", id).Delete(&recordFood).Error; err != nil {
+		return &foods.Domain{}, err
+	}
+	result := toDomain(recordFood)
+	return &result, nil
+}

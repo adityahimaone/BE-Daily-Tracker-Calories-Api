@@ -122,7 +122,7 @@ func (handler *Presenter) UploudAvatar(echoContext echo.Context) error {
 		response := helper.APIResponse("Uploud Avatar Failed", http.StatusBadRequest, "Error", err)
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
-	_, err = handler.serviceUser.UploudAvatar(userID, path)
+	_, err = handler.serviceUser.UploadAvatar(userID, path)
 	if err != nil {
 		response := helper.APIResponse("Uploud Avatar Failed", http.StatusBadRequest, "Error", err)
 		return echoContext.JSON(http.StatusBadRequest, response)

@@ -67,7 +67,7 @@ func (s *serviceUsers) Login(email string, password string) (string, error) {
 	return token, nil
 }
 
-func (s *serviceUsers) UploudAvatar(id int, fileLocation string) (*Domain, error) {
+func (s *serviceUsers) UploadAvatar(id int, fileLocation string) (*Domain, error) {
 	user, err := s.repository.FindByID(id)
 	if err != nil {
 		return &Domain{}, err
