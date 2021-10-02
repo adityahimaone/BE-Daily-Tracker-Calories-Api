@@ -45,3 +45,11 @@ func (s serviceFoods) GetAllFood() (*[]Domain, error) {
 	}
 	return result, nil
 }
+
+func (s serviceFoods) DeleteFood(id int, food *Domain) (*Domain, error) {
+	result, err := s.repository.Delete(id, food)
+	if err != nil {
+		return &Domain{}, err
+	}
+	return result, nil
+}

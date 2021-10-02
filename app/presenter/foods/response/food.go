@@ -14,6 +14,10 @@ type Food struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
+type Delete struct {
+	Data string `json:"data"`
+}
+
 func FromDomain(domain foods.Domain) Food {
 	return Food{
 		ID:        domain.ID,
