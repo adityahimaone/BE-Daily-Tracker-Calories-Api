@@ -45,17 +45,9 @@ func (handler *Presenter) SaveCalorie(echoContext echo.Context) error {
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
 	domain := _request.ToDomain(req)
-	_, err := handler.serviceCalorie.CountCalorie(domain)
-	log.Println("1", domain)
-	if err != nil {
-		response := helper.APIResponse("Failed Get Calorie", http.StatusBadRequest, "Error", err)
-		return echoContext.JSON(http.StatusBadRequest, response)
-	}
 	user := auth.GetUser(echoContext) // ID Get From JWT
 	userID := user.ID
-	domain.UserID = userID
-	resp, err := handler.serviceCalorie.CreateCalorie(domain)
-	log.Println("2", domain)
+	resp, err := handler.serviceCalorie.CreateCalorie(domain, userID)
 	if err != nil {
 		response := helper.APIResponse("Failed Get Calorie", http.StatusBadRequest, "Error", err)
 		return echoContext.JSON(http.StatusBadRequest, response)

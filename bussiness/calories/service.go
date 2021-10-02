@@ -1,12 +1,18 @@
 package calories
 
+import (
+	_users "daily-tracker-calories/bussiness/users"
+)
+
 type serviceCalorie struct {
-	repository Repository
+	repository  Repository
+	userService _users.Service
 }
 
-func NewService(repositoryCalorie Repository) Service {
+func NewService(repositoryCalorie Repository, userServ _users.Service) Service {
 	return &serviceCalorie{
-		repository: repositoryCalorie,
+		repository:  repositoryCalorie,
+		userService: userServ,
 	}
 }
 
@@ -44,14 +50,23 @@ func (s *serviceCalorie) CountCalorie(calorie *Domain) (*Domain, error) {
 	return &Domain{}, nil
 }
 
-func (s serviceCalorie) CreateCalorie(calorie *Domain) (*Domain, error) {
-	result, err := s.repository.Insert(calorie)
+func (s serviceCalorie) CreateCalorie(calorie *Domain, idUser int) (*Domain, error) {
+	calorie.UserID = idUser
+	_, err := s.CountCalorie(calorie)
+	if err != nil {
+		return &Domain{}, err
+	}
+	validId, err := s.repository.GetCalorieByUserID(idUser)
+	if validId.ID == 0 {
+		result, err := s.repository.Insert(calorie, idUser)
+		if err != nil {
+			return &Domain{}, err
+		}
+		return result, nil
+	}
+	result, err := s.repository.Update(calorie, idUser)
 	if err != nil {
 		return &Domain{}, err
 	}
 	return result, nil
-}
-
-func (s *serviceCalorie) UpdateCalorie(calorie *Domain) (*Domain, error) {
-	panic("implement me")
 }

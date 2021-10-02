@@ -61,7 +61,7 @@ func main() {
 	usersHandler := _handlerUsers.NewHandler(userService, &configJWT)
 
 	calorieRepository := _repositoryCalories.NewRepositoryMySQL(db)
-	calorieService := _serviceCalories.NewService(calorieRepository)
+	calorieService := _serviceCalories.NewService(calorieRepository, userService)
 	calorieHandler := _handlerCalories.NewHandler(calorieService)
 
 	foodRepository := _repositoryFoods.NewRepositoryMySQL(db)
