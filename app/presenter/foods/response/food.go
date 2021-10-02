@@ -24,3 +24,11 @@ func FromDomain(domain foods.Domain) Food {
 		UpdatedAt: domain.UpdatedAt,
 	}
 }
+
+func FromDomainArray(domain []foods.Domain) []Food {
+	var res []Food
+	for _, v := range domain {
+		res = append(res, FromDomain(v))
+	}
+	return res
+}

@@ -6,7 +6,6 @@ import (
 	_response "daily-tracker-calories/app/presenter/users/response"
 	"daily-tracker-calories/bussiness/users"
 	"daily-tracker-calories/helper"
-	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
@@ -39,7 +38,7 @@ func (handler *Presenter) RegisterUser(echoContext echo.Context) error {
 		response := helper.APIResponse("Failed Register", http.StatusInternalServerError, "Error", nil)
 		return echoContext.JSON(http.StatusInternalServerError, response)
 	}
-	response := helper.APIResponse("Success Register User", http.StatusOK, "Success", _response.FromDomain(*resp))
+	response := helper.APIResponse("Success Register User", http.StatusOK, "Success", resp.Token)
 	return echoContext.JSON(http.StatusOK, response)
 }
 
@@ -50,27 +49,23 @@ func (handler *Presenter) LoginUser(echoContext echo.Context) error {
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
 	resp, err := handler.serviceUser.Login(req.Email, req.Password)
-	token := handler.jwtAuth.GenerateToken(resp.ID)
+	/*token := handler.jwtAuth.GenerateToken(resp.ID)
 	resp.Token = token
 	mapToken, _ := extractClaims(token)
-	id := mapToken["id"]
-	fmt.Println(id)
+	id := mapToken["id"]*/
 	if err != nil {
 		response := helper.APIResponse("Failed Login", http.StatusBadRequest, "Error", nil)
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
-
-	if resp.ID == 0 {
-		response := helper.APIResponse("ID Not Found", http.StatusBadRequest, "Error", nil)
-		return echoContext.JSON(http.StatusBadRequest, response)
-	}
-
+	log.Println(resp)
 	if err != nil {
 		response := helper.APIResponse("Generate Token Failed", http.StatusBadRequest, "Error", nil)
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
-
-	response := helper.APIResponse("Success Login", http.StatusOK, "Success", _response.UserLogin{ID: resp.ID, Email: resp.Email, Token: resp.Token})
+	response2 := struct {
+		Token string `json:"token"`
+	}{Token: resp}
+	response := helper.APIResponse("Success Login", http.StatusOK, "Success", response2)
 	return echoContext.JSON(http.StatusOK, response)
 }
 

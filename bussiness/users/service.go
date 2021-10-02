@@ -1,16 +1,20 @@
 package users
 
 import (
+	"daily-tracker-calories/app/middleware/auth"
 	"daily-tracker-calories/helper"
+	"log"
 )
 
 type serviceUsers struct {
 	repository Repository
+	jwtAuth    *auth.ConfigJWT
 }
 
-func NewService(repositoryUser Repository) Service {
+func NewService(repositoryUser Repository, jwtauth *auth.ConfigJWT) Service {
 	return &serviceUsers{
 		repository: repositoryUser,
+		jwtAuth:    jwtauth,
 	}
 }
 
@@ -48,16 +52,18 @@ func (s *serviceUsers) FindByID(id int) (*Domain, error) {
 	return user, nil
 }
 
-func (s *serviceUsers) Login(email string, password string) (*Domain, error) {
+func (s *serviceUsers) Login(email string, password string) (string, error) {
 	user, err := s.repository.Login(email, password)
 	if err != nil {
-		return &Domain{}, err
+		return "", err
 	}
 	if !helper.ValidateHash(password, user.Password) {
-		return user, err
+		return "", err
 	}
 	if user.ID == 0 {
-		return &Domain{}, err
+		return "", err
 	}
-	return user, nil
+	token := s.jwtAuth.GenerateToken(user.ID)
+	log.Println(token)
+	return token, nil
 }

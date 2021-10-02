@@ -16,7 +16,12 @@ func NewRepositoryMySQL(db *gorm.DB) foods.Repository {
 }
 
 func (repository repositoryFoods) GetFoodByName(name string) (*foods.Domain, error) {
-	panic("implement me")
+	recordFood := Foods{}
+	if err := repository.DB.Where("name = ?", name).First(&recordFood).Error; err != nil {
+		return &foods.Domain{}, err
+	}
+	result := toDomain(recordFood)
+	return &result, nil
 }
 
 func (repository repositoryFoods) Insert(food *foods.Domain) (*foods.Domain, error) {
@@ -25,5 +30,14 @@ func (repository repositoryFoods) Insert(food *foods.Domain) (*foods.Domain, err
 		return &foods.Domain{}, err
 	}
 	result := toDomain(recordFood)
+	return &result, nil
+}
+
+func (repository repositoryFoods) GetAllFood() (*[]foods.Domain, error) {
+	var recordFood []Foods
+	if err := repository.DB.Find(&recordFood).Error; err != nil {
+		return &[]foods.Domain{}, err
+	}
+	result := toDomainArray(recordFood)
 	return &result, nil
 }

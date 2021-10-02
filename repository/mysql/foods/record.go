@@ -32,3 +32,11 @@ func fromDomain(domain foods.Domain) Foods {
 		Photo:   domain.Photo,
 	}
 }
+
+func toDomainArray(record []Foods) []foods.Domain {
+	var res []foods.Domain
+	for _, v := range record {
+		res = append(res, toDomain(v))
+	}
+	return res
+}
