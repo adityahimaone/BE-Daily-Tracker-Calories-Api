@@ -20,7 +20,7 @@ type Service interface {
 	RegisterUser(user *Domain) (*Domain, error)
 	Update(id int, user *Domain) (*Domain, error)
 	FindByID(id int) (*Domain, error)
-	Login(email string, password string) (*Domain, error)
+	Login(email string, password string) (string, error)
 }
 
 type Repository interface {

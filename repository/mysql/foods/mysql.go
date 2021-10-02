@@ -32,3 +32,12 @@ func (repository repositoryFoods) Insert(food *foods.Domain) (*foods.Domain, err
 	result := toDomain(recordFood)
 	return &result, nil
 }
+
+func (repository repositoryFoods) GetAllFood() (*[]foods.Domain, error) {
+	var recordFood []Foods
+	if err := repository.DB.Find(&recordFood).Error; err != nil {
+		return &[]foods.Domain{}, err
+	}
+	result := toDomainArray(recordFood)
+	return &result, nil
+}

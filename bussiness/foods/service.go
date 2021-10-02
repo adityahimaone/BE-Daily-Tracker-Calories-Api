@@ -29,3 +29,11 @@ func (s serviceFoods) SaveFood(food *Domain) (*Domain, error) {
 	}
 	return result, nil
 }
+
+func (s serviceFoods) GetAllFood() (*[]Domain, error) {
+	result, err := s.repository.GetAllFood()
+	if err != nil {
+		return &[]Domain{}, err
+	}
+	return result, nil
+}

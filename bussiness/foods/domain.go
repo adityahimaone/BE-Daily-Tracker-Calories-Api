@@ -15,10 +15,11 @@ type Service interface {
 	GetFoodByName(name string) (*Domain, error)
 	GetFoodAPI(food *Domain) (*Domain, error)
 	SaveFood(food *Domain) (*Domain, error)
+	GetAllFood() (*[]Domain, error)
 }
-
 
 type Repository interface {
 	GetFoodByName(name string) (*Domain, error)
 	Insert(food *Domain) (*Domain, error)
+	GetAllFood() (*[]Domain, error)
 }

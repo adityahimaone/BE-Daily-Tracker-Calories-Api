@@ -57,7 +57,7 @@ func main() {
 	//factory of domain
 	//authService := _middleware.NewHandler()
 	userRepository := _repositoryUsers.NewRepositoryMySQL(db)
-	userService := _serviceUsers.NewService(userRepository)
+	userService := _serviceUsers.NewService(userRepository, &configJWT)
 	usersHandler := _handlerUsers.NewHandler(userService, &configJWT)
 
 	calorieRepository := _repositoryCalories.NewRepositoryMySQL(db)
