@@ -26,15 +26,6 @@ func FromDomain(domain users.Domain) User {
 }
 
 type UserLogin struct {
-	ID    int    `json:"id"`
-	Email string `json:"email"`
 	Token string `json:"token"`
 }
 
-func FromDomainLogin(domain users.Domain) UserLogin {
-	return UserLogin{
-		ID:    domain.ID,
-		Email: domain.Email,
-		Token: domain.Token,
-	}
-}

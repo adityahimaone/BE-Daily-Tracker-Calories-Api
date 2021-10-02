@@ -3,7 +3,6 @@ package users
 import (
 	"daily-tracker-calories/bussiness/users"
 	"gorm.io/gorm"
-	"log"
 )
 
 type repositoryUsers struct {
@@ -48,7 +47,6 @@ func (repository repositoryUsers) FindByID(id int) (*users.Domain, error) {
 
 func (repository repositoryUsers) FindByEmail(email string) (*users.Domain, error) {
 	recordUser := Users{}
-	log.Println(email, "repo")
 	if err := repository.DB.Where("email = ?", email).First(&recordUser).Error; err != nil {
 		return &users.Domain{}, err
 	}

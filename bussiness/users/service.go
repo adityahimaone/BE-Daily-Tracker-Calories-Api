@@ -66,3 +66,16 @@ func (s *serviceUsers) Login(email string, password string) (string, error) {
 	token := s.jwtAuth.GenerateToken(user.ID)
 	return token, nil
 }
+
+func (s *serviceUsers) UploudAvatar(id int, fileLocation string) (*Domain, error) {
+	user, err := s.repository.FindByID(id)
+	if err != nil {
+		return &Domain{}, err
+	}
+	user.Avatar = fileLocation
+	updateAvatar, err := s.repository.Update(id, user)
+	if err != nil {
+		return &Domain{}, err
+	}
+	return updateAvatar, nil
+}

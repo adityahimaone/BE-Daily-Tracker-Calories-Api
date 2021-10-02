@@ -21,6 +21,7 @@ type Service interface {
 	Update(id int, user *Domain) (*Domain, error)
 	FindByID(id int) (*Domain, error)
 	Login(email string, password string) (string, error)
+	UploudAvatar(id int, fileLocation string) (*Domain, error)
 }
 
 type Repository interface {

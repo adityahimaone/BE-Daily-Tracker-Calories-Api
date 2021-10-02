@@ -6,11 +6,14 @@ import (
 	_response "daily-tracker-calories/app/presenter/users/response"
 	"daily-tracker-calories/bussiness/users"
 	"daily-tracker-calories/helper"
+	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
+	"io"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 )
 
@@ -48,21 +51,16 @@ func (handler *Presenter) LoginUser(echoContext echo.Context) error {
 		response := helper.APIResponse("Failed Login", http.StatusBadRequest, "Error", nil)
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
-	log.Println(req, "handler")
 	resp, err := handler.serviceUser.Login(req.Email, req.Password)
 	if err != nil {
 		response := helper.APIResponse("Failed Login", http.StatusBadRequest, "Error", nil)
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
-	log.Println(resp)
 	if err != nil {
 		response := helper.APIResponse("Generate Token Failed", http.StatusBadRequest, "Error", nil)
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
-	res := struct {
-		Token string `json:"token"`
-	}{Token: resp}
-	response := helper.APIResponse("Success Login", http.StatusOK, "Success", res)
+	response := helper.APIResponse("Success Login", http.StatusOK, "Success", _response.UserLogin{Token: resp})
 	return echoContext.JSON(http.StatusOK, response)
 }
 
@@ -96,6 +94,40 @@ func (handler *Presenter) FindByID(echoContext echo.Context) error {
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
 	response := helper.APIResponse("Success", http.StatusOK, "Success", _response.FromDomain(*resp))
+	return echoContext.JSON(http.StatusOK, response)
+}
+
+func (handler *Presenter) UploudAvatar(echoContext echo.Context) error {
+	file, err := echoContext.FormFile("avatar")
+	if err != nil {
+		response := helper.APIResponse("Uploud Avatar Failed", http.StatusBadRequest, "Error", err)
+		return echoContext.JSON(http.StatusBadRequest, response)
+	}
+	user := auth.GetUser(echoContext) // ID Get From JWT
+	userID := user.ID
+	path := fmt.Sprintf("images/avatar/%d-%s", userID, file.Filename)
+	src, err := file.Open()
+	if err != nil {
+		response := helper.APIResponse("Uploud Avatar Failed", http.StatusBadRequest, "Error", err)
+		return echoContext.JSON(http.StatusBadRequest, response)
+	}
+	defer src.Close()
+	destination, err := os.Create(path)
+	if err != nil {
+		response := helper.APIResponse("Uploud Avatar Failed", http.StatusBadRequest, "Error", err)
+		return echoContext.JSON(http.StatusBadRequest, response)
+	}
+	defer destination.Close()
+	if _, err = io.Copy(destination, src); err != nil {
+		response := helper.APIResponse("Uploud Avatar Failed", http.StatusBadRequest, "Error", err)
+		return echoContext.JSON(http.StatusBadRequest, response)
+	}
+	_, err = handler.serviceUser.UploudAvatar(userID, path)
+	if err != nil {
+		response := helper.APIResponse("Uploud Avatar Failed", http.StatusBadRequest, "Error", err)
+		return echoContext.JSON(http.StatusBadRequest, response)
+	}
+	response := helper.APIResponse("Success", http.StatusOK, "Success", fmt.Sprintf("File %s uploaded successfully with fields User ID : %d and path : %s", file.Filename, user.ID, path))
 	return echoContext.JSON(http.StatusOK, response)
 }
 
