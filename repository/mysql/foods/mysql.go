@@ -15,6 +15,15 @@ func NewRepositoryMySQL(db *gorm.DB) foods.Repository {
 	}
 }
 
+func (repository repositoryFoods) GetFoodByID(id int) (*foods.Domain, error) {
+	recordFood := Foods{}
+	if err := repository.DB.Where("id = ?", id).First(&recordFood).Error; err != nil {
+		return &foods.Domain{}, err
+	}
+	result := toDomain(recordFood)
+	return &result, nil
+}
+
 func (repository repositoryFoods) GetFoodByName(name string) (*foods.Domain, error) {
 	recordFood := Foods{}
 	if err := repository.DB.Where("name = ?", name).First(&recordFood).Error; err != nil {

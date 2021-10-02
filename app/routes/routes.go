@@ -31,4 +31,5 @@ func (handler *HandlerList) RouteRegister(e *echo.Echo) {
 	group.POST("/food/save", handler.FoodHandler.SaveFood)
 	group.GET("/food/", handler.FoodHandler.GetFoodByName)
 	group.GET("/food", handler.FoodHandler.GetAllFood)
+	group.GET("/food/:id", handler.FoodHandler.GetFoodByID)
 }

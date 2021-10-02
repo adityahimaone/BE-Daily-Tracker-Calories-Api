@@ -12,6 +12,7 @@ type Domain struct {
 }
 
 type Service interface {
+	GetFoodByID(id int) (*Domain, error)
 	GetFoodByName(name string) (*Domain, error)
 	GetFoodAPI(food *Domain) (*Domain, error)
 	SaveFood(food *Domain) (*Domain, error)
@@ -19,6 +20,7 @@ type Service interface {
 }
 
 type Repository interface {
+	GetFoodByID(id int) (*Domain, error)
 	GetFoodByName(name string) (*Domain, error)
 	Insert(food *Domain) (*Domain, error)
 	GetAllFood() (*[]Domain, error)

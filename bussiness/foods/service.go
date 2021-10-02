@@ -10,6 +10,14 @@ func NewService(repositoryFood Repository) Service {
 	}
 }
 
+func (s serviceFoods) GetFoodByID(id int) (*Domain, error) {
+	result, err := s.repository.GetFoodByID(id)
+	if err != nil {
+		return &Domain{}, err
+	}
+	return result, nil
+}
+
 func (s serviceFoods) GetFoodByName(name string) (*Domain, error) {
 	result, err := s.repository.GetFoodByName(name)
 	if err != nil {
