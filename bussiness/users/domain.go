@@ -10,7 +10,6 @@ type Domain struct {
 	Avatar    string
 	Gender    string
 	Token     string
-	CalorieID int
 	Calorie   int
 	CreatedAt time.Time
 	UpdatedAt time.Time

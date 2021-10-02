@@ -70,3 +70,11 @@ func (s serviceCalorie) CreateCalorie(calorie *Domain, idUser int) (*Domain, err
 	}
 	return result, nil
 }
+
+func (s *serviceCalorie) GetCalorieByUserID(id int) (*Domain, error) {
+	result, err := s.repository.GetCalorieByUserID(id)
+	if err != nil {
+		return &Domain{}, err
+	}
+	return result, nil
+}

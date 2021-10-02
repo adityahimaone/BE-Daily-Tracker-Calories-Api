@@ -14,6 +14,7 @@ type Domain struct {
 type Service interface {
 	CountCalorie(calorie *Domain) (*Domain, error)
 	CreateCalorie(calorie *Domain, id int) (*Domain, error)
+	GetCalorieByUserID(id int) (*Domain, error)
 }
 
 type Repository interface {

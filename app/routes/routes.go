@@ -27,6 +27,7 @@ func (handler *HandlerList) RouteRegister(e *echo.Echo) {
 	//calorie endpoint
 	group.POST("/calorie/count", handler.CalorieHandler.CountCalorie)
 	group.POST("/calorie/save", handler.CalorieHandler.SaveCalorie, middleware.JWTWithConfig(handler.JWTMiddleware))
+	group.GET("/calorie/user", handler.CalorieHandler.GetCalorieByUserID, middleware.JWTWithConfig(handler.JWTMiddleware))
 
 	//food endpoint
 	group.POST("/food/save", handler.FoodHandler.SaveFood)
