@@ -2,6 +2,7 @@ package calories
 
 import (
 	"daily-tracker-calories/bussiness/calories"
+	"daily-tracker-calories/repository/mysql/users"
 	"gorm.io/gorm"
 )
 
@@ -10,6 +11,7 @@ type Calories struct {
 	ID      uint `gorm:"primaryKey"`
 	Calorie float64
 	UserID  int
+	Users   users.Users `gorm:"foreignKey:user_id"`
 }
 
 func toDomain(record Calories) calories.Domain {

@@ -58,14 +58,14 @@ func (service *serviceHistories) GetAllHistoriesByUserID(userid int) (*[]Domain,
 	return user, nil
 }
 
-func (service *serviceHistories) UserStat(userid int) (float64, float64, string, error, error) {
+func (service *serviceHistories) UserStat(userid int) (float64, float64, string, error) {
 	currentCalorie, err := service.historiesRepository.SumCalorieByUserID(userid)
 	if err != nil {
-		return 0.0, 0.0, "", err, err
+		return 0.0, 0.0, "", err
 	}
 	needCalorie, err := service.caloriesService.GetCalorieFloat(userid)
 	if err != nil {
-		return 0.0, 0.0, "", err, err
+		return 0.0, 0.0, "", err
 	}
 	status := ""
 	percent := currentCalorie / needCalorie
@@ -78,5 +78,5 @@ func (service *serviceHistories) UserStat(userid int) (float64, float64, string,
 	} else {
 		status = "Kelebihan Makan (>100%)"
 	}
-	return currentCalorie, needCalorie, status, nil, nil
+	return currentCalorie, needCalorie, status, nil
 }

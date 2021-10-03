@@ -32,10 +32,6 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-
-	if viper.GetBool(`debug`) {
-		log.Println("Service RUN on DEBUG mode")
-	}
 }
 
 func main() {
@@ -58,7 +54,6 @@ func main() {
 	e := echo.New()
 
 	//factory of domain
-	//authService := _middleware.NewHandler()
 	userRepository := _repositoryUsers.NewRepositoryMySQL(db)
 	userService := _serviceUsers.NewService(userRepository, &configJWT)
 	usersHandler := _handlerUsers.NewHandler(userService, &configJWT)

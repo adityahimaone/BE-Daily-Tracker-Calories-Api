@@ -23,13 +23,13 @@ func (jwtConf *ConfigJWT) Init() middleware.JWTConfig {
 	return middleware.JWTConfig{
 		Claims:     &JwtCustomClaims{},
 		SigningKey: []byte(jwtConf.SecretJWT),
-		ErrorHandlerWithContext: middleware.JWTErrorHandlerWithContext(func(e error, c echo.Context) error {
+		ErrorHandlerWithContext: func(e error, c echo.Context) error {
 			return presenter.NewErrorResponse(c, http.StatusForbidden, e)
-		}),
+		},
 	}
 }
 
-// GenerateToken jwt ...
+// generate token jwt
 func (jwtConf *ConfigJWT) GenerateToken(userID int) string {
 	claims := JwtCustomClaims{
 		userID,
@@ -37,11 +37,9 @@ func (jwtConf *ConfigJWT) GenerateToken(userID int) string {
 			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(int64(jwtConf.ExpiresDuration))).Unix(),
 		},
 	}
-
 	// CreateCalorie token with claims
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	token, _ := t.SignedString([]byte(jwtConf.SecretJWT))
-
 	return token
 }
 
@@ -63,8 +61,6 @@ func GetUser(c echo.Context) *JwtCustomClaims {
   	token, err = initToken.SignedString([]byte(viper.GetString(`jwt.token`)))
   	return
   }
-
-
 
   func GetKey(token *jwt.Token) int {
   	keyID, _ := token.Header["id"].(int)

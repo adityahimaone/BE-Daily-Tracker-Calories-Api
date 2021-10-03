@@ -11,7 +11,6 @@ type serviceUsers struct {
 	jwtAuth    *auth.ConfigJWT
 }
 
-
 func NewService(repositoryUser Repository, jwtauth *auth.ConfigJWT) Service {
 	return &serviceUsers{
 		repository: repositoryUser,
@@ -25,11 +24,15 @@ func (service *serviceUsers) RegisterUser(user *Domain) (*Domain, error) {
 		panic(err)
 	}
 	user.Password = passwordHash
-	result, err := service.repository.Insert(user)
-	if err != nil {
-		return &Domain{}, err
+	emailValid, err := service.repository.FindByEmail(user.Email)
+	if emailValid != nil {
+		result, err := service.repository.Insert(user)
+		if err != nil {
+			return &Domain{}, err
+		}
+		return result, nil
 	}
-	return result, nil
+	return &Domain{}, errors.New("email registered")
 }
 
 func (service *serviceUsers) Update(id int, user *Domain) (*Domain, error) {
@@ -79,4 +82,12 @@ func (service *serviceUsers) UploadAvatar(id int, fileLocation string) (*Domain,
 		return &Domain{}, err
 	}
 	return updateAvatar, nil
+}
+
+func (service *serviceUsers) EmailAvailable(email string) (bool, error) {
+	user, _ := service.repository.FindByEmail(email)
+	if user != nil {
+		return false, nil
+	}
+	return true, nil
 }
