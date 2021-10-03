@@ -30,8 +30,7 @@ func (repository repositoryHistories) Insert(history *histories.Domain) (*histor
 
 func (repository repositoryHistories) GetHistoryByUserID(userid int) (*histories.Domain, error) {
 	recordHistory := Histories{}
-	today := time.Now().Format("2012006")
-	if err := repository.DB.Where("user_id = ? AND date = ?", userid, today).Joins("Users").Joins("Foods").Find(&recordHistory).Error; err != nil {
+	if err := repository.DB.Where("user_id = ?", userid).Joins("Users").Joins("Foods").Last(&recordHistory).Error; err != nil {
 		return &histories.Domain{}, err
 	}
 	result := toDomain(recordHistory)
@@ -50,7 +49,8 @@ func (repository repositoryHistories) GetAllHistoriesByUserID(userid int) (*[]hi
 func (repository repositoryHistories) SumCalorieByUserID(userid int) (float64, error) {
 	var recordHistory Histories
 	var sumCalorie float64
-	if err := repository.DB.Raw("select SUM(calorie) from histories where user_id = ? GROUP BY date", userid).Scan(&sumCalorie).Last(&recordHistory).Error; err != nil {
+	today := time.Now().Format("2012006")
+	if err := repository.DB.Raw("select SUM(calorie) from histories where user_id = ? AND date = ?", userid, today).Scan(&sumCalorie).Find(&recordHistory).Error; err != nil {
 		return 0.0, err
 	}
 	return sumCalorie, nil
