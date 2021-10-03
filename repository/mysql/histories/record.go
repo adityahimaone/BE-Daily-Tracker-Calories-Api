@@ -5,7 +5,6 @@ import (
 	"daily-tracker-calories/repository/mysql/foods"
 	"daily-tracker-calories/repository/mysql/users"
 	"gorm.io/gorm"
-	"time"
 )
 
 type Histories struct {
@@ -18,7 +17,7 @@ type Histories struct {
 	Calorie  float64
 	FoodName string
 	Foods    foods.Foods `gorm:"foreignKey:food_id"`
-	Date     time.Time
+	Date     string
 }
 
 func toDomain(record Histories) histories.Domain {
@@ -45,4 +44,12 @@ func fromDomain(domain histories.Domain) Histories {
 		FoodName: domain.FoodName,
 		Date:     domain.Date,
 	}
+}
+
+func toDomainArray(record []Histories) []histories.Domain {
+	var res []histories.Domain
+	for _, v := range record {
+		res = append(res, toDomain(v))
+	}
+	return res
 }

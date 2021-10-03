@@ -18,42 +18,42 @@ func NewService(repositoryUser Repository, jwtauth *auth.ConfigJWT) Service {
 	}
 }
 
-func (s *serviceUsers) RegisterUser(user *Domain) (*Domain, error) {
+func (service *serviceUsers) RegisterUser(user *Domain) (*Domain, error) {
 	passwordHash, err := helper.PasswordHash(user.Password)
 	if err != nil {
 		panic(err)
 	}
 	user.Password = passwordHash
-	result, err := s.repository.Insert(user)
+	result, err := service.repository.Insert(user)
 	if err != nil {
 		return &Domain{}, err
 	}
 	return result, nil
 }
 
-func (s *serviceUsers) Update(id int, user *Domain) (*Domain, error) {
+func (service *serviceUsers) Update(id int, user *Domain) (*Domain, error) {
 	passwordHash, err := helper.PasswordHash(user.Password)
 	if err != nil {
 		panic(err)
 	}
 	user.Password = passwordHash
-	result, err := s.repository.Update(id, user)
+	result, err := service.repository.Update(id, user)
 	if err != nil {
 		return &Domain{}, err
 	}
 	return result, nil
 }
 
-func (s *serviceUsers) FindByID(id int) (*Domain, error) {
-	user, err := s.repository.FindByID(id)
+func (service *serviceUsers) FindByID(id int) (*Domain, error) {
+	user, err := service.repository.FindByID(id)
 	if err != nil {
 		return &Domain{}, err
 	}
 	return user, nil
 }
 
-func (s *serviceUsers) Login(email string, password string) (string, error) {
-	user, err := s.repository.FindByEmail(email)
+func (service *serviceUsers) Login(email string, password string) (string, error) {
+	user, err := service.repository.FindByEmail(email)
 	if err != nil {
 		return "ID Not Found", errors.New("User Not Found")
 	}
@@ -63,17 +63,17 @@ func (s *serviceUsers) Login(email string, password string) (string, error) {
 	if !helper.ValidateHash(password, user.Password) {
 		return "Error Validate Hash", errors.New("Error Validate Hash")
 	}
-	token := s.jwtAuth.GenerateToken(user.ID)
+	token := service.jwtAuth.GenerateToken(user.ID)
 	return token, nil
 }
 
-func (s *serviceUsers) UploadAvatar(id int, fileLocation string) (*Domain, error) {
-	user, err := s.repository.FindByID(id)
+func (service *serviceUsers) UploudAvatar(id int, fileLocation string) (*Domain, error) {
+	user, err := service.repository.FindByID(id)
 	if err != nil {
 		return &Domain{}, err
 	}
 	user.Avatar = fileLocation
-	updateAvatar, err := s.repository.Update(id, user)
+	updateAvatar, err := service.repository.Update(id, user)
 	if err != nil {
 		return &Domain{}, err
 	}

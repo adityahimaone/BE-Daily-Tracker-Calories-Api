@@ -10,16 +10,15 @@ import (
 )
 
 type HandlerList struct {
-	UserHandler    users.Presenter
-	JWTMiddleware  middleware.JWTConfig
-	CalorieHandler calories.Presenter
-	FoodHandler    foods.Presenter
+	UserHandler      users.Presenter
+	JWTMiddleware    middleware.JWTConfig
+	CalorieHandler   calories.Presenter
+	FoodHandler      foods.Presenter
 	HistoriesHandler histories.Presenter
 }
 
 func (handler *HandlerList) RouteRegister(e *echo.Echo) {
 	group := e.Group("/api/v1")
-	//group.Use(middleware.JWT([]byte(viper.GetString(`jwt.token`))))
 	group.POST("/users/register", handler.UserHandler.RegisterUser)
 	group.PUT("/users/update", handler.UserHandler.UpdateUser, middleware.JWTWithConfig(handler.JWTMiddleware))
 	group.POST("/users/login", handler.UserHandler.LoginUser)
@@ -40,4 +39,5 @@ func (handler *HandlerList) RouteRegister(e *echo.Echo) {
 
 	//histories
 	group.POST("/histories/create", handler.HistoriesHandler.CreateHistory, middleware.JWTWithConfig(handler.JWTMiddleware))
+	group.GET("/histories/user", handler.HistoriesHandler.GetAllHistoriesByUserID, middleware.JWTWithConfig(handler.JWTMiddleware))
 }

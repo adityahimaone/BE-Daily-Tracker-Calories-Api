@@ -12,7 +12,7 @@ type Histories struct {
 	FoodID    int       `json:"food_id"`
 	Calorie   float64   `json:"calorie"`
 	FoodName  string    `json:"food_name"`
-	Date      time.Time `json:"date"`
+	Date      string    `json:"date"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -29,4 +29,12 @@ func FromDomain(domain histories.Domain) Histories {
 		CreatedAt: domain.CreatedAt,
 		UpdatedAt: domain.UpdatedAt,
 	}
+}
+
+func FromDomainArray(domain []histories.Domain) []Histories {
+	var res []Histories
+	for _, v := range domain {
+		res = append(res, FromDomain(v))
+	}
+	return res
 }

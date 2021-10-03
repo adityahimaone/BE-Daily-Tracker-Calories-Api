@@ -21,15 +21,15 @@ func NewService(repositoryHistories Repository, repositoryFoods foods.Repository
 	}
 }
 
-func (s *serviceHistories) CreateHistories(histories *Domain) (*Domain, error) {
-	user, err := s.usersService.FindByID(histories.UserID)
+func (service *serviceHistories) CreateHistories(histories *Domain) (*Domain, error) {
+	user, err := service.usersService.FindByID(histories.UserID)
 	if err != nil {
 		return &Domain{}, err
 	}
 	histories.UserID = user.ID
 	histories.NameUser = user.Name
 	log.Println(user.Name)
-	food, err := s.foodsRepository.GetFoodByName(histories.FoodName)
+	food, err := service.foodsRepository.GetFoodByName(histories.FoodName)
 	if err != nil {
 		return &Domain{}, err
 	}
@@ -37,16 +37,20 @@ func (s *serviceHistories) CreateHistories(histories *Domain) (*Domain, error) {
 	histories.FoodName = food.Name
 	histories.Calorie = food.Calorie
 	log.Println(food.Name)
-	dateTime := time.Now()
+	dateTime := time.Now().Format("2012006")
 	histories.Date = dateTime
 	log.Println(histories)
-	result, err := s.historiesRepository.Insert(histories, food)
+	result, err := service.historiesRepository.Insert(histories)
 	if err != nil {
 		return &Domain{}, err
 	}
 	return result, nil
 }
 
-func (s *serviceHistories) GetHistoriesByUserID(userid int) (*[]Domain, error) {
-	panic("implement me")
+func (service *serviceHistories) GetAllHistoriesByUserID(userid int) (*[]Domain, error) {
+	user, err := service.historiesRepository.GetAllHistoriesByUserID(userid)
+	if err != nil {
+		return &[]Domain{}, err
+	}
+	return user, nil
 }

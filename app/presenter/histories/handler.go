@@ -39,3 +39,15 @@ func (handler *Presenter) CreateHistory(echoContext echo.Context) error {
 	response := helper.APIResponse("Success Get Calorie", http.StatusOK, "Success", _response.FromDomain(*resp))
 	return echoContext.JSON(http.StatusOK, response)
 }
+
+func (handler *Presenter) GetAllHistoriesByUserID(echoContext echo.Context) error {
+	user := auth.GetUser(echoContext)
+	userID := user.ID
+	resp, err := handler.serviceHistories.GetAllHistoriesByUserID(userID)
+	if err != nil {
+		response := helper.APIResponse("Failed", http.StatusBadRequest, "Error", err)
+		return echoContext.JSON(http.StatusBadRequest, response)
+	}
+	response := helper.APIResponse("Success Get All Food By User ID", http.StatusBadRequest, "Success", _response.FromDomainArray(*resp))
+	return echoContext.JSON(http.StatusBadRequest, response)
+}
