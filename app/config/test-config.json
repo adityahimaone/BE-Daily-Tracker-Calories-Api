@@ -1,5 +1,4 @@
 {
-  "debug": true,
   "server": {
     "address": ":8080"
   },
@@ -11,7 +10,7 @@
     "name": "dailycalories_test"
   },
   "jwt": {
-    "secret": "supersecret12345!@#$%",
+    "secret": "tokens4nga#raha$!asek4lL",
     "expired": 2
   }
 }
