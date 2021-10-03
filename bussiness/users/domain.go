@@ -21,6 +21,7 @@ type Service interface {
 	FindByID(id int) (*Domain, error)
 	Login(email string, password string) (string, error)
 	UploadAvatar(id int, fileLocation string) (*Domain, error)
+	EmailAvailable(email string) (bool, error)
 }
 
 type Repository interface {
