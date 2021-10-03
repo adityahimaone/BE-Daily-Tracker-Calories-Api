@@ -15,10 +15,12 @@ type Service interface {
 	CountCalorie(calorie *Domain) (*Domain, error)
 	CreateCalorie(calorie *Domain, id int) (*Domain, error)
 	GetCalorieByUserID(id int) (*Domain, error)
+	GetCalorieFloat(id int) (float64, error)
 }
 
 type Repository interface {
 	Insert(calorie *Domain, idUser int) (*Domain, error)
 	Update(calorie *Domain, id int) (*Domain, error)
 	GetCalorieByUserID(id int) (*Domain, error)
+	GetCalorieFloat(id int) (float64, error)
 }

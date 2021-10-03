@@ -38,3 +38,9 @@ func FromDomainArray(domain []histories.Domain) []Histories {
 	}
 	return res
 }
+
+type UserStat struct {
+	CalorieNeed    float64 `json:"calorie_need"`
+	CalorieCurrent float64 `json:"calorie_current"`
+	Status         string  `json:"status"`
+}
