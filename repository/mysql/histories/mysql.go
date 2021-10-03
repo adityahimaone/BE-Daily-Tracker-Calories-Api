@@ -3,6 +3,7 @@ package histories
 import (
 	"daily-tracker-calories/bussiness/histories"
 	"gorm.io/gorm"
+	"time"
 )
 
 type repositoryHistories struct {
@@ -29,7 +30,8 @@ func (repository repositoryHistories) Insert(history *histories.Domain) (*histor
 
 func (repository repositoryHistories) GetHistoryByUserID(userid int) (*histories.Domain, error) {
 	recordHistory := Histories{}
-	if err := repository.DB.Where("user_id = ?", userid).Joins("Users").Joins("Foods").Last(&recordHistory).Error; err != nil {
+	today := time.Now().Format("2012006")
+	if err := repository.DB.Where("user_id = ? AND date = ?", userid, today).Joins("Users").Joins("Foods").Find(&recordHistory).Error; err != nil {
 		return &histories.Domain{}, err
 	}
 	result := toDomain(recordHistory)
