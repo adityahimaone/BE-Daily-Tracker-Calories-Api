@@ -78,3 +78,11 @@ func (s *serviceCalorie) GetCalorieByUserID(id int) (*Domain, error) {
 	}
 	return result, nil
 }
+
+func (s *serviceCalorie) GetCalorieFloat(id int) (float64, error) {
+	result, err := s.repository.GetCalorieFloat(id)
+	if err != nil {
+		return 0.0, err
+	}
+	return result, nil
+}

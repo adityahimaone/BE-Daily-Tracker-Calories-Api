@@ -44,3 +44,12 @@ func (repository repositoryUsers) GetCalorieByUserID(id int) (*calories.Domain, 
 	result := toDomain(recordCalorie)
 	return &result, nil
 }
+
+func (repository repositoryUsers) GetCalorieFloat(id int) (float64, error) {
+	recordCalorie := Calories{}
+	var calorie float64
+	if err := repository.DB.Raw("select calorie from calories where user_id = ?", id).Scan(&calorie).Last(&recordCalorie).Error; err != nil {
+		return 0.0, err
+	}
+	return calorie, nil
+}

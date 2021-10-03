@@ -97,7 +97,7 @@ func (handler *Presenter) FindByID(echoContext echo.Context) error {
 	return echoContext.JSON(http.StatusOK, response)
 }
 
-func (handler *Presenter) UploudAvatar(echoContext echo.Context) error {
+func (handler *Presenter) UploadAvatar(echoContext echo.Context) error {
 	file, err := echoContext.FormFile("avatar")
 	if err != nil {
 		response := helper.APIResponse("Uploud Avatar Failed", http.StatusBadRequest, "Error", err)

@@ -44,3 +44,12 @@ func (repository repositoryHistories) GetAllHistoriesByUserID(userid int) (*[]hi
 	result := toDomainArray(recordHistory)
 	return &result, nil
 }
+
+func (repository repositoryHistories) SumCalorieByUserID(userid int) (float64, error) {
+	var recordHistory Histories
+	var sumCalorie float64
+	if err := repository.DB.Raw("select SUM(calorie) from histories where user_id = ? GROUP BY date", userid).Scan(&sumCalorie).Last(&recordHistory).Error; err != nil {
+		return 0.0, err
+	}
+	return sumCalorie, nil
+}

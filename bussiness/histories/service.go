@@ -1,6 +1,7 @@
 package histories
 
 import (
+	"daily-tracker-calories/bussiness/calories"
 	"daily-tracker-calories/bussiness/foods"
 	"daily-tracker-calories/bussiness/users"
 	"log"
@@ -11,13 +12,15 @@ type serviceHistories struct {
 	historiesRepository Repository
 	foodsRepository     foods.Repository
 	usersService        users.Service
+	caloriesService     calories.Service
 }
 
-func NewService(repositoryHistories Repository, repositoryFoods foods.Repository, serviceUser users.Service) Service {
+func NewService(repositoryHistories Repository, repositoryFoods foods.Repository, serviceUser users.Service, serviceCalorie calories.Service) Service {
 	return &serviceHistories{
 		historiesRepository: repositoryHistories,
 		foodsRepository:     repositoryFoods,
 		usersService:        serviceUser,
+		caloriesService:     serviceCalorie,
 	}
 }
 
@@ -53,4 +56,27 @@ func (service *serviceHistories) GetAllHistoriesByUserID(userid int) (*[]Domain,
 		return &[]Domain{}, err
 	}
 	return user, nil
+}
+
+func (service *serviceHistories) UserStat(userid int) (float64, float64, string, error, error) {
+	currentCalorie, err := service.historiesRepository.SumCalorieByUserID(userid)
+	if err != nil {
+		return 0.0, 0.0, "", err, err
+	}
+	needCalorie, err := service.caloriesService.GetCalorieFloat(userid)
+	if err != nil {
+		return 0.0, 0.0, "", err, err
+	}
+	status := ""
+	percent := currentCalorie / needCalorie
+	result := percent * 100
+	log.Print(result)
+	if result < 80 {
+		status = "Kurang Makan (<80%)"
+	} else if result >= 80 && result <= 100 {
+		status = "Cukup Makan (80 - 100%)"
+	} else {
+		status = "Kelebihan Makan (>100%)"
+	}
+	return currentCalorie, needCalorie, status, nil, nil
 }

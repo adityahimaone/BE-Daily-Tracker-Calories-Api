@@ -53,3 +53,13 @@ func toDomainArray(record []Histories) []histories.Domain {
 	}
 	return res
 }
+
+type Stat struct {
+	SumCalorie float64
+}
+
+func toDomainStat(record Stat) histories.Domain {
+	return histories.Domain{
+		SumCalorie: record.SumCalorie,
+	}
+}

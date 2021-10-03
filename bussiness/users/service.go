@@ -11,6 +11,7 @@ type serviceUsers struct {
 	jwtAuth    *auth.ConfigJWT
 }
 
+
 func NewService(repositoryUser Repository, jwtauth *auth.ConfigJWT) Service {
 	return &serviceUsers{
 		repository: repositoryUser,
@@ -67,7 +68,7 @@ func (service *serviceUsers) Login(email string, password string) (string, error
 	return token, nil
 }
 
-func (service *serviceUsers) UploudAvatar(id int, fileLocation string) (*Domain, error) {
+func (service *serviceUsers) UploadAvatar(id int, fileLocation string) (*Domain, error) {
 	user, err := service.repository.FindByID(id)
 	if err != nil {
 		return &Domain{}, err

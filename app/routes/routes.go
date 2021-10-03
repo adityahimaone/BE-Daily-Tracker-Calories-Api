@@ -23,7 +23,7 @@ func (handler *HandlerList) RouteRegister(e *echo.Echo) {
 	group.PUT("/users/update", handler.UserHandler.UpdateUser, middleware.JWTWithConfig(handler.JWTMiddleware))
 	group.POST("/users/login", handler.UserHandler.LoginUser)
 	group.GET("/users/:id", handler.UserHandler.FindByID)
-	group.POST("/users/avatars", handler.UserHandler.UploudAvatar, middleware.JWTWithConfig(handler.JWTMiddleware))
+	group.POST("/users/avatars", handler.UserHandler.UploadAvatar, middleware.JWTWithConfig(handler.JWTMiddleware))
 
 	//calorie endpoint
 	group.POST("/calorie/count", handler.CalorieHandler.CountCalorie)
@@ -40,4 +40,5 @@ func (handler *HandlerList) RouteRegister(e *echo.Echo) {
 	//histories
 	group.POST("/histories/create", handler.HistoriesHandler.CreateHistory, middleware.JWTWithConfig(handler.JWTMiddleware))
 	group.GET("/histories/user", handler.HistoriesHandler.GetAllHistoriesByUserID, middleware.JWTWithConfig(handler.JWTMiddleware))
+	group.GET("/histories/stat", handler.HistoriesHandler.UserStat, middleware.JWTWithConfig(handler.JWTMiddleware))
 }
