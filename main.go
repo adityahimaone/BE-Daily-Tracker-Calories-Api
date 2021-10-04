@@ -17,6 +17,7 @@ import (
 	_repositoryFoods "daily-tracker-calories/repository/mysql/foods"
 	_repositoryHistories "daily-tracker-calories/repository/mysql/histories"
 	_repositoryUsers "daily-tracker-calories/repository/mysql/users"
+	"github.com/go-playground/validator/v10"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
@@ -47,16 +48,18 @@ func main() {
 		SecretJWT:       viper.GetString(`jwt.secret`),
 		ExpiresDuration: viper.GetInt(`jwt.expired`),
 	}
-
+	//Validate Package
+	validate := validator.New()
+	//Init DB
 	db := configDB.IntialDB()
 	mysqlRepo.MigrateDB(db)
-
+	//Init Echo Framework
 	e := echo.New()
 
 	//factory of domain
 	userRepository := _repositoryUsers.NewRepositoryMySQL(db)
 	userService := _serviceUsers.NewService(userRepository, &configJWT)
-	usersHandler := _handlerUsers.NewHandler(userService, &configJWT)
+	usersHandler := _handlerUsers.NewHandler(userService, &configJWT, validate)
 
 	calorieRepository := _repositoryCalories.NewRepositoryMySQL(db)
 	calorieService := _serviceCalories.NewService(calorieRepository, userService)

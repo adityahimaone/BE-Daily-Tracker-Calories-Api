@@ -5,6 +5,7 @@ import (
 	"daily-tracker-calories/bussiness/foods"
 	"daily-tracker-calories/bussiness/users"
 	"log"
+	"strconv"
 	"time"
 )
 
@@ -58,18 +59,20 @@ func (service *serviceHistories) GetAllHistoriesByUserID(userid int) (*[]Domain,
 	return user, nil
 }
 
-func (service *serviceHistories) UserStat(userid int) (float64, float64, string, error) {
+func (service *serviceHistories) UserStat(userid int) (float64, float64, string, string, error) {
 	currentCalorie, err := service.historiesRepository.SumCalorieByUserID(userid)
 	if err != nil {
-		return 0.0, 0.0, "", err
+		return 0.0, 0.0, "", "", err
 	}
 	needCalorie, err := service.caloriesService.GetCalorieFloat(userid)
 	if err != nil {
-		return 0.0, 0.0, "", err
+		return 0.0, 0.0, "", "", err
 	}
 	status := ""
 	percent := currentCalorie / needCalorie
 	result := percent * 100
+	percentage := strconv.Itoa(int(result))
+	str_percentage := percentage + " %"
 	log.Print(result)
 	if result < 80 {
 		status = "Kurang Makan (<80%)"
@@ -78,5 +81,5 @@ func (service *serviceHistories) UserStat(userid int) (float64, float64, string,
 	} else {
 		status = "Kelebihan Makan (>100%)"
 	}
-	return currentCalorie, needCalorie, status, nil
+	return currentCalorie, needCalorie, str_percentage, status, nil
 }

@@ -24,13 +24,13 @@ func (service *serviceUsers) RegisterUser(user *Domain) (*Domain, error) {
 		panic(err)
 	}
 	user.Password = passwordHash
-	emailValid, err := service.repository.FindByEmail(user.Email)
-	if emailValid != nil {
+	valid, err := service.EmailAvailable(user.Email)
+	if valid == true {
 		result, err := service.repository.Insert(user)
 		if err != nil {
 			return &Domain{}, err
 		}
-		return result, nil
+		return result, err
 	}
 	return &Domain{}, errors.New("email registered")
 }
@@ -85,9 +85,12 @@ func (service *serviceUsers) UploadAvatar(id int, fileLocation string) (*Domain,
 }
 
 func (service *serviceUsers) EmailAvailable(email string) (bool, error) {
-	user, _ := service.repository.FindByEmail(email)
-	if user != nil {
-		return false, nil
+	user, err := service.repository.FindByEmail(email)
+	if err != nil {
+		return true, err
 	}
-	return true, nil
+	if user.ID == 0 {
+		return true, nil
+	}
+	return false, nil
 }
