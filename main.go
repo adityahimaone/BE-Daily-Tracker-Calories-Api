@@ -63,7 +63,7 @@ func main() {
 
 	calorieRepository := _repositoryCalories.NewRepositoryMySQL(db)
 	calorieService := _serviceCalories.NewService(calorieRepository, userService)
-	calorieHandler := _handlerCalories.NewHandler(calorieService)
+	calorieHandler := _handlerCalories.NewHandler(calorieService, validate)
 
 	foodRepository := _repositoryFoods.NewRepositoryMySQL(db)
 	foodService := _serviceFoods.NewService(foodRepository)

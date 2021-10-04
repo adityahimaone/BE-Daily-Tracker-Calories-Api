@@ -2,21 +2,25 @@ package calories
 
 import (
 	"daily-tracker-calories/app/middleware/auth"
+	"daily-tracker-calories/app/middleware/validate"
 	_request "daily-tracker-calories/app/presenter/calories/request"
 	_response "daily-tracker-calories/app/presenter/calories/response"
 	"daily-tracker-calories/bussiness/calories"
 	"daily-tracker-calories/helper"
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"net/http"
 )
 
 type Presenter struct {
 	serviceCalorie calories.Service
+	validate       *validator.Validate
 }
 
-func NewHandler(calorieServ calories.Service) *Presenter {
+func NewHandler(calorieServ calories.Service, validator *validator.Validate) *Presenter {
 	return &Presenter{
 		serviceCalorie: calorieServ,
+		validate:       validator,
 	}
 }
 
@@ -24,6 +28,12 @@ func (handler *Presenter) CountCalorie(echoContext echo.Context) error {
 	req := _request.Calorie{}
 	if err := echoContext.Bind(&req); err != nil {
 		response := helper.APIResponse("Failed Get Calorie", http.StatusBadRequest, "Error", err)
+		return echoContext.JSON(http.StatusBadRequest, response)
+	}
+	if err := handler.validate.Struct(req); err != nil {
+		errors := validate.FormatValidationError(err)
+		errorsData := map[string]interface{}{"errors": errors}
+		response := helper.APIResponse("Failed Login", http.StatusBadRequest, "Error Validation", errorsData)
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
 	domain := _request.ToDomain(req)
