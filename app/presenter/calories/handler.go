@@ -52,6 +52,12 @@ func (handler *Presenter) SaveCalorie(echoContext echo.Context) error {
 		response := helper.APIResponse("Failed", http.StatusBadRequest, "Error", err)
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
+	if err := handler.validate.Struct(req); err != nil {
+		errors := validate.FormatValidationError(err)
+		errorsData := map[string]interface{}{"errors": errors}
+		response := helper.APIResponse("Failed Login", http.StatusBadRequest, "Error Validation", errorsData)
+		return echoContext.JSON(http.StatusBadRequest, response)
+	}
 	domain := _request.ToDomain(req)
 	user := auth.GetUser(echoContext) // ID Get From JWT
 	userID := user.ID
