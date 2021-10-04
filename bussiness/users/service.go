@@ -24,8 +24,8 @@ func (service *serviceUsers) RegisterUser(user *Domain) (*Domain, error) {
 		panic(err)
 	}
 	user.Password = passwordHash
-	emailValid, err := service.repository.FindByEmail(user.Email)
-	if emailValid != nil {
+	_, err = service.repository.FindByEmail(user.Email)
+	if err != nil {
 		result, err := service.repository.Insert(user)
 		if err != nil {
 			return &Domain{}, err

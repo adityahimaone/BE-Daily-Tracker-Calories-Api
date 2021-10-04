@@ -2,12 +2,14 @@ package users
 
 import (
 	"daily-tracker-calories/app/middleware/auth"
+	"daily-tracker-calories/app/middleware/validate"
 	_request "daily-tracker-calories/app/presenter/users/request"
 	_response "daily-tracker-calories/app/presenter/users/response"
 	"daily-tracker-calories/bussiness/users"
 	"daily-tracker-calories/helper"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
 	"io"
@@ -20,12 +22,14 @@ import (
 type Presenter struct {
 	serviceUser users.Service
 	jwtAuth     *auth.ConfigJWT
+	validate    *validator.Validate
 }
 
-func NewHandler(userService users.Service, jwtauth *auth.ConfigJWT) *Presenter {
+func NewHandler(userService users.Service, jwtauth *auth.ConfigJWT, validator *validator.Validate) *Presenter {
 	return &Presenter{
 		serviceUser: userService,
 		jwtAuth:     jwtauth,
+		validate:    validator,
 	}
 }
 
@@ -33,6 +37,12 @@ func (handler *Presenter) RegisterUser(echoContext echo.Context) error {
 	var req _request.User
 	if err := echoContext.Bind(&req); err != nil {
 		response := helper.APIResponse("Failed Register", http.StatusBadRequest, "Error", nil)
+		return echoContext.JSON(http.StatusBadRequest, response)
+	}
+	if err := handler.validate.Struct(req); err != nil {
+		errors := validate.FormatValidationError(err)
+		errorsData := map[string]interface{}{"errors": errors}
+		response := helper.APIResponse("Failed Login", http.StatusBadRequest, "Error Validation", errorsData)
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
 	domain := _request.ToDomain(req)
@@ -51,13 +61,15 @@ func (handler *Presenter) LoginUser(echoContext echo.Context) error {
 		response := helper.APIResponse("Failed Login", http.StatusBadRequest, "Error", nil)
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
+	if err := handler.validate.Struct(req); err != nil {
+		errors := validate.FormatValidationError(err)
+		errorsData := map[string]interface{}{"errors": errors}
+		response := helper.APIResponse("Failed Login", http.StatusBadRequest, "Error Validation", errorsData)
+		return echoContext.JSON(http.StatusBadRequest, response)
+	}
 	resp, err := handler.serviceUser.Login(req.Email, req.Password)
 	if err != nil {
 		response := helper.APIResponse("Failed Login", http.StatusBadRequest, "Error", nil)
-		return echoContext.JSON(http.StatusBadRequest, response)
-	}
-	if err != nil {
-		response := helper.APIResponse("Generate Token Failed", http.StatusBadRequest, "Error", nil)
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
 	response := helper.APIResponse("Success Login", http.StatusOK, "Success", _response.UserLogin{Token: resp})
@@ -68,6 +80,12 @@ func (handler *Presenter) UpdateUser(echoContext echo.Context) error {
 	var req _request.User
 	if err := echoContext.Bind(&req); err != nil {
 		response := helper.APIResponse("Failed FindByEmail", http.StatusBadRequest, "Error", nil)
+		return echoContext.JSON(http.StatusBadRequest, response)
+	}
+	if err := handler.validate.Struct(req); err != nil {
+		errors := validate.FormatValidationError(err)
+		errorsData := map[string]interface{}{"errors": errors}
+		response := helper.APIResponse("Failed Login", http.StatusBadRequest, "Error Validation", errorsData)
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
 	domain := _request.ToDomain(req)

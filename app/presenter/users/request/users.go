@@ -3,10 +3,10 @@ package request
 import "daily-tracker-calories/bussiness/users"
 
 type User struct {
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Gender   string `json:"gender"`
+	Name     string `json:"name" validate:"required"`
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required"`
+	Gender   string `json:"gender" validate:"required"`
 }
 
 type SaveAvatar struct {
@@ -14,8 +14,8 @@ type SaveAvatar struct {
 }
 
 type UserLogin struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required"`
 }
 
 func ToDomain(request User) *users.Domain {

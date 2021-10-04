@@ -28,4 +28,7 @@ func FromDomain(domain users.Domain) User {
 type UserLogin struct {
 	Token string `json:"token"`
 }
+type Validate struct {
+	Error string `json:"error"`
+}
 
