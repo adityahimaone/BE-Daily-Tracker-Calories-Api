@@ -61,7 +61,7 @@ func TestGetFood(t *testing.T) {
 	log.Println(joinQuery)
 	minCal := 0
 	number := 1
-	urlString := fmt.Sprintf("https://api.spoonacular.com/recipes/complexSearch?apiKey=%s&query=%s&minCalories=%d&number=%d", apikey, joinQuery, minCal, number)
+	urlString := fmt.Sprintf("https://api.foodAPI.com/recipes/complexSearch?apiKey=%s&query=%s&minCalories=%d&number=%d", apikey, joinQuery, minCal, number)
 	log.Println(urlString)
 	response, err := http.Get(urlString)
 	if err != nil {
@@ -77,8 +77,38 @@ func TestGetFood(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	log.Println(food.Results)
-	log.Println(food.Number)
+	var array1 []struct {
+		Title  string
+		Image  string
+		Amount float64
+	}
+	for _, valueResult := range food.Results {
+		for _, valueNutrients := range valueResult.Nutrition.Nutrients {
+			array1 = append(array1, struct {
+				Title  string
+				Image  string
+				Amount float64
+			}{Title: valueResult.Title, Image: valueResult.Image, Amount: valueNutrients.Amount})
+			fmt.Println(array1)
+		}
+	}
+	titleFood := ""
+	imageFood := ""
+	amountKcal := 0.0
+	var valueFood []string
+	var valueCal []float64
+	for _, v := range array1 {
+		valueFood = append(valueFood, v.Title, v.Image)
+	}
+	for _, v := range array1 {
+		valueCal = append(valueCal, v.Amount)
+	}
+	titleFood = valueFood[0]
+	imageFood = valueFood[1]
+	amountKcal = valueCal[0]
+	fmt.Println(titleFood)
+	fmt.Println(imageFood)
+	fmt.Println(amountKcal)
 }
 
 func TestSplit(t *testing.T) {
@@ -93,3 +123,15 @@ func TestSplit(t *testing.T) {
 	res := Food{[]FoodDesc{food1}, 1, 2, 3}
 	log.Println(res)
 }
+
+/*var array1 []struct
+for keyResult, valueResult := range struct.Results{
+for keyNutrients, valueNutiens := range valuevalueResult.Nutrition.Nutriciens{
+array1 := append(array1, struct{
+Title : valueResult.Title
+Image :
+NutitionTitle : valueNutiens.Title
+})
+}
+}
+*/

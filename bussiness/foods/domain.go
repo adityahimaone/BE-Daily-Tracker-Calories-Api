@@ -14,7 +14,7 @@ type Domain struct {
 type Service interface {
 	GetFoodByID(id int) (*Domain, error)
 	GetFoodByName(name string) (*Domain, error)
-	GetFoodAPI(food *Domain) (*Domain, error)
+	GetFoodAPI(name string) (*Domain, error)
 	SaveFood(food *Domain) (*Domain, error)
 	GetAllFood() (*[]Domain, error)
 	DeleteFood(id int, food *Domain) (*Domain, error)
