@@ -55,11 +55,11 @@ func (handler *Presenter) GetAllHistoriesByUserID(echoContext echo.Context) erro
 func (handler *Presenter) UserStat(echoContext echo.Context) error {
 	user := auth.GetUser(echoContext)
 	userID := user.ID
-	current, need, status, err := handler.serviceHistories.UserStat(userID)
+	current, need, percentage, status, err := handler.serviceHistories.UserStat(userID)
 	if err != nil {
 		response := helper.APIResponse("Failed", http.StatusBadRequest, "Error", err)
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
-	response := helper.APIResponse("Success Get Calorie", http.StatusOK, "Success", _response.UserStat{CalorieCurrent: current, CalorieNeed: need, Status: status})
+	response := helper.APIResponse("Success Get Calorie", http.StatusOK, "Success", _response.UserStat{CalorieCurrent: current, CalorieNeed: need, Percentage: percentage, Status: status})
 	return echoContext.JSON(http.StatusOK, response)
 }

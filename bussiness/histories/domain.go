@@ -21,7 +21,7 @@ type Domain struct {
 type Service interface {
 	CreateHistories(histories *Domain) (*Domain, error)
 	GetAllHistoriesByUserID(userid int) (*[]Domain, error)
-	UserStat(userid int) (float64, float64, string, error)
+	UserStat(userid int) (float64, float64, string, string, error)
 }
 
 type Repository interface {

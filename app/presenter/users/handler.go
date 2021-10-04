@@ -85,7 +85,7 @@ func (handler *Presenter) UpdateUser(echoContext echo.Context) error {
 func (handler *Presenter) FindByID(echoContext echo.Context) error {
 	id, err := strconv.Atoi(echoContext.Param("id"))
 	if err != nil {
-		response := helper.APIResponse("Failed FindByEmail", http.StatusBadRequest, "Error", nil)
+		response := helper.APIResponse("Failed Find By ID", http.StatusBadRequest, "Error", nil)
 		return echoContext.JSON(http.StatusBadRequest, response)
 	}
 	resp, err := handler.serviceUser.FindByID(id)

@@ -42,5 +42,6 @@ func FromDomainArray(domain []histories.Domain) []Histories {
 type UserStat struct {
 	CalorieNeed    float64 `json:"calorie_need"`
 	CalorieCurrent float64 `json:"calorie_current"`
+	Percentage     string  `json:"percentage"`
 	Status         string  `json:"status"`
 }
