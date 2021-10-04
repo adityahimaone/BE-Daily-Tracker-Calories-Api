@@ -17,6 +17,7 @@ import (
 	_repositoryFoods "daily-tracker-calories/repository/mysql/foods"
 	_repositoryHistories "daily-tracker-calories/repository/mysql/histories"
 	_repositoryUsers "daily-tracker-calories/repository/mysql/users"
+	"daily-tracker-calories/repository/thirdparties/spoonacular"
 	"github.com/go-playground/validator/v10"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
@@ -55,6 +56,8 @@ func main() {
 	mysqlRepo.MigrateDB(db)
 	//Init Echo Framework
 	e := echo.New()
+	//Thirdparty
+	foodAPIRepository := spoonacular.NewFoodAPI()
 
 	//factory of domain
 	userRepository := _repositoryUsers.NewRepositoryMySQL(db)
@@ -66,7 +69,7 @@ func main() {
 	calorieHandler := _handlerCalories.NewHandler(calorieService, validate)
 
 	foodRepository := _repositoryFoods.NewRepositoryMySQL(db)
-	foodService := _serviceFoods.NewService(foodRepository)
+	foodService := _serviceFoods.NewService(foodRepository, foodAPIRepository)
 	foodHandler := _handlerFoods.NewHandler(foodService)
 
 	historiesRepository := _repositoryHistories.NewRepositoryMySQL(db)
