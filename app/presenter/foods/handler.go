@@ -92,3 +92,26 @@ func (handler *Presenter) DeleteFood(echoContext echo.Context) error {
 	response := helper.APIResponse("Success", http.StatusOK, "Success", _response.Delete{Data: "Success Delete Food"})
 	return echoContext.JSON(http.StatusBadRequest, response)
 }
+
+func (handler *Presenter) EditFood(echoContext echo.Context) error {
+	var req _request.Food
+	if err := echoContext.Bind(&req); err != nil {
+		response := helper.APIResponse("Failed Edit Food", http.StatusBadRequest, "Error", err)
+		return echoContext.JSON(http.StatusBadRequest, response)
+	}
+	id, err := strconv.Atoi(echoContext.Param("id"))
+	if err != nil {
+		response := helper.APIResponse("Failed Edit Food", http.StatusBadRequest, "Error", err)
+		return echoContext.JSON(http.StatusBadRequest, response)
+	}
+	domain := _request.ToDomain(req)
+	resp, err := handler.serviceFood.EditFood(id, domain)
+	resp.ID = id
+	if err != nil {
+		response := helper.APIResponse("Failed Edit Food", http.StatusBadRequest, "Error", err)
+		return echoContext.JSON(http.StatusBadRequest, response)
+	}
+	response := helper.APIResponse("Success", http.StatusOK, "Success", _response.FromDomain(*resp))
+	return echoContext.JSON(http.StatusBadRequest, response)
+
+}

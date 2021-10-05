@@ -77,6 +77,14 @@ func (s *serviceFoods) DeleteFood(id int, food *Domain) (*Domain, error) {
 	return result, nil
 }
 
+func (s *serviceFoods) EditFood(id int, food *Domain) (*Domain, error) {
+	result, err := s.repository.Update(id, food)
+	if err != nil {
+		return &Domain{}, err
+	}
+	return result, nil
+}
+
 /*func (s *serviceFoods) GetFoodByName(name string) (*Domain, error) {
 	result, err := s.repository.GetFoodByName(name)
 	if err != nil {

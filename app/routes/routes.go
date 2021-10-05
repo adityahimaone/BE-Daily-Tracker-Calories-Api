@@ -21,7 +21,7 @@ func (handler *HandlerList) RouteRegister(e *echo.Echo) {
 	group := e.Group("/api/v1")
 	//users endpoint
 	group.POST("/users/register", handler.UserHandler.RegisterUser)
-	group.PUT("/users/update", handler.UserHandler.UpdateUser, middleware.JWTWithConfig(handler.JWTMiddleware))
+	group.PUT("/users/edit", handler.UserHandler.EditUser, middleware.JWTWithConfig(handler.JWTMiddleware))
 	group.POST("/users/login", handler.UserHandler.LoginUser)
 	group.GET("/users/:id", handler.UserHandler.FindByID)
 	group.POST("/users/avatars", handler.UserHandler.UploadAvatar, middleware.JWTWithConfig(handler.JWTMiddleware))
@@ -36,7 +36,8 @@ func (handler *HandlerList) RouteRegister(e *echo.Echo) {
 	group.GET("/food/", handler.FoodHandler.GetFoodByName)
 	group.GET("/food", handler.FoodHandler.GetAllFood)
 	group.GET("/food/:id", handler.FoodHandler.GetFoodByID)
-	group.DELETE("/food/:id", handler.FoodHandler.DeleteFood)
+	group.DELETE("/food/delete/:id", handler.FoodHandler.DeleteFood)
+	group.PUT("/food/edit/:id", handler.FoodHandler.EditFood)
 
 	//histories
 	group.POST("/histories/create", handler.HistoriesHandler.CreateHistory, middleware.JWTWithConfig(handler.JWTMiddleware))

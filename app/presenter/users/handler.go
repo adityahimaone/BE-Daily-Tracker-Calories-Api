@@ -76,7 +76,7 @@ func (handler *Presenter) LoginUser(echoContext echo.Context) error {
 	return echoContext.JSON(http.StatusOK, response)
 }
 
-func (handler *Presenter) UpdateUser(echoContext echo.Context) error {
+func (handler *Presenter) EditUser(echoContext echo.Context) error {
 	var req _request.User
 	if err := echoContext.Bind(&req); err != nil {
 		response := helper.APIResponse("Failed FindByEmail", http.StatusBadRequest, "Error", nil)
@@ -91,7 +91,7 @@ func (handler *Presenter) UpdateUser(echoContext echo.Context) error {
 	domain := _request.ToDomain(req)
 	user := auth.GetUser(echoContext) // ID Get From JWT
 	userID := user.ID
-	resp, err := handler.serviceUser.Update(userID, domain)
+	resp, err := handler.serviceUser.EditUser(userID, domain)
 	if err != nil {
 		response := helper.APIResponse("Failed", http.StatusBadRequest, "Error", nil)
 		return echoContext.JSON(http.StatusBadRequest, response)

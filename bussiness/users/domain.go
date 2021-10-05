@@ -17,7 +17,7 @@ type Domain struct {
 
 type Service interface {
 	RegisterUser(user *Domain) (*Domain, error)
-	Update(id int, user *Domain) (*Domain, error)
+	EditUser(id int, user *Domain) (*Domain, error)
 	FindByID(id int) (*Domain, error)
 	Login(email string, password string) (string, error)
 	UploadAvatar(id int, fileLocation string) (*Domain, error)
