@@ -73,7 +73,7 @@ func main() {
 	foodHandler := _handlerFoods.NewHandler(foodService)
 
 	historiesRepository := _repositoryHistories.NewRepositoryMySQL(db)
-	historiesService := _serviceHistories.NewService(historiesRepository, foodRepository, userService, calorieService)
+	historiesService := _serviceHistories.NewService(historiesRepository, foodRepository, userService, calorieService, foodService)
 	historiesHandler := _handlerHistories.NewHandler(historiesService)
 
 	// initial of routes

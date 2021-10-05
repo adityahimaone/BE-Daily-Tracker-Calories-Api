@@ -14,14 +14,16 @@ type serviceHistories struct {
 	foodsRepository     foods.Repository
 	usersService        users.Service
 	caloriesService     calories.Service
+	foodsService        foods.Service
 }
 
-func NewService(repositoryHistories Repository, repositoryFoods foods.Repository, serviceUser users.Service, serviceCalorie calories.Service) Service {
+func NewService(repositoryHistories Repository, repositoryFoods foods.Repository, serviceUser users.Service, serviceCalorie calories.Service, serviceFood foods.Service) Service {
 	return &serviceHistories{
 		historiesRepository: repositoryHistories,
 		foodsRepository:     repositoryFoods,
 		usersService:        serviceUser,
 		caloriesService:     serviceCalorie,
+		foodsService:        serviceFood,
 	}
 }
 
@@ -33,7 +35,7 @@ func (service *serviceHistories) CreateHistories(histories *Domain) (*Domain, er
 	histories.UserID = user.ID
 	histories.NameUser = user.Name
 	log.Println(user.Name)
-	food, err := service.foodsRepository.GetFoodByName(histories.FoodName)
+	food, err := service.foodsService.GetFoodByName(histories.FoodName)
 	if err != nil {
 		return &Domain{}, err
 	}
