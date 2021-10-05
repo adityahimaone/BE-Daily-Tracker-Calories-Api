@@ -4,6 +4,7 @@ import (
 	"daily-tracker-calories/bussiness/foodAPI"
 	"encoding/json"
 	"fmt"
+	"github.com/spf13/viper"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -21,22 +22,20 @@ func NewFoodAPI() foodAPI.Repository {
 }
 
 func (s spoonacularAPI) GetFoodByName(name string) (*foodAPI.Domain, error) {
-	apikey := "f85868cf3e9f448c851d46fe687a40ac"
-	//query := "cup cake"
+	apikey := viper.GetString(`spoonacular.apikey`)
 	splitQuery := strings.Split(name, " ")
 	joinQuery := strings.Join(splitQuery, "%20")
-	log.Println(joinQuery)
 	minCal := 0
 	number := 1
 	urlString := fmt.Sprintf("https://api.spoonacular.com/recipes/complexSearch?apiKey=%s&query=%s&minCalories=%d&number=%d", apikey, joinQuery, minCal, number)
 	log.Println(urlString)
 	response, err := http.Get(urlString)
 	if err != nil {
-		log.Println(err)
+		panic(err)
 	}
 	responseData, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		log.Println(err)
+		panic(err)
 	}
 	defer response.Body.Close()
 	food := FoodsSource{}
@@ -56,12 +55,11 @@ func (s spoonacularAPI) GetFoodByName(name string) (*foodAPI.Domain, error) {
 				Image  string
 				Amount float64
 			}{Title: valueResult.Title, Image: valueResult.Image, Amount: valueNutrients.Amount})
-			fmt.Println(foodTemp)
 		}
 	}
-	titleFood := ""
-	imageFood := ""
-	amountKcal := 0.0
+	var titleFood string
+	var imageFood string
+	var amountKcal float64
 	var valueFood []string
 	var valueCal []float64
 	for _, v := range foodTemp {

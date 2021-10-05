@@ -12,5 +12,8 @@
   "jwt": {
     "secret": "tokens4nga#raha$!asek4lL",
     "expired": 2
+  },
+  "spoonacular": {
+    "apikey" : "f85868cf3e9f448c851d46fe687a40ac"
   }
 }

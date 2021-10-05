@@ -35,7 +35,7 @@ func (service *serviceUsers) RegisterUser(user *Domain) (*Domain, error) {
 	return &Domain{}, errors.New("email registered")
 }
 
-func (service *serviceUsers) Update(id int, user *Domain) (*Domain, error) {
+func (service *serviceUsers) EditUser(id int, user *Domain) (*Domain, error) {
 	passwordHash, err := helper.PasswordHash(user.Password)
 	if err != nil {
 		panic(err)

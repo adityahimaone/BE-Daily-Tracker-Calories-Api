@@ -18,6 +18,7 @@ type Service interface {
 	SaveFood(food *Domain) (*Domain, error)
 	GetAllFood() (*[]Domain, error)
 	DeleteFood(id int, food *Domain) (*Domain, error)
+	EditFood(id int, food *Domain) (*Domain, error)
 }
 
 type Repository interface {
@@ -26,4 +27,5 @@ type Repository interface {
 	Insert(food *Domain) (*Domain, error)
 	GetAllFood() (*[]Domain, error)
 	Delete(id int, food *Domain) (*Domain, error)
+	Update(id int, food *Domain) (*Domain, error)
 }

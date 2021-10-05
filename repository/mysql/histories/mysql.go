@@ -39,7 +39,7 @@ func (repository repositoryHistories) GetHistoryByUserID(userid int) (*histories
 
 func (repository repositoryHistories) GetAllHistoriesByUserID(userid int) (*[]histories.Domain, error) {
 	var recordHistory []Histories
-	if err := repository.DB.Where("user_id = ?", userid).Joins("Users").Joins("Foods").Find(&recordHistory).Group("date").Error; err != nil {
+	if err := repository.DB.Where("user_id = ?", userid).Order("date desc").Joins("Users").Joins("Foods").Find(&recordHistory).Group("date").Error; err != nil {
 		return &[]histories.Domain{}, err
 	}
 	result := toDomainArray(recordHistory)

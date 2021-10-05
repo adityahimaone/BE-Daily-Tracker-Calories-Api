@@ -29,9 +29,12 @@ func (s *serviceFoods) GetFoodByName(name string) (*Domain, error) {
 	if err != nil {
 		apiFood, err := s.GetFoodAPI(name)
 		if err != nil {
-			return nil, err
+			return &Domain{}, err
 		}
 		insert, err := s.SaveFood(apiFood)
+		if err != nil {
+			return &Domain{}, err
+		}
 		return insert, nil
 	}
 	return result, nil
@@ -68,6 +71,14 @@ func (s *serviceFoods) GetAllFood() (*[]Domain, error) {
 
 func (s *serviceFoods) DeleteFood(id int, food *Domain) (*Domain, error) {
 	result, err := s.repository.Delete(id, food)
+	if err != nil {
+		return &Domain{}, err
+	}
+	return result, nil
+}
+
+func (s *serviceFoods) EditFood(id int, food *Domain) (*Domain, error) {
+	result, err := s.repository.Update(id, food)
 	if err != nil {
 		return &Domain{}, err
 	}

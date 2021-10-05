@@ -59,3 +59,12 @@ func (repository repositoryFoods) Delete(id int, food *foods.Domain) (*foods.Dom
 	result := toDomain(recordFood)
 	return &result, nil
 }
+
+func (repository repositoryFoods) Update(id int, food *foods.Domain) (*foods.Domain, error) {
+	recordFood := fromDomain(*food)
+	if err := repository.DB.Where("id = ?", id).Updates(&recordFood).Error; err != nil {
+		return &foods.Domain{}, err
+	}
+	result := toDomain(recordFood)
+	return &result, nil
+}
