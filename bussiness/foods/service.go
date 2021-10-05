@@ -29,9 +29,12 @@ func (s *serviceFoods) GetFoodByName(name string) (*Domain, error) {
 	if err != nil {
 		apiFood, err := s.GetFoodAPI(name)
 		if err != nil {
-			return nil, err
+			return &Domain{}, err
 		}
 		insert, err := s.SaveFood(apiFood)
+		if err != nil {
+			return &Domain{}, err
+		}
 		return insert, nil
 	}
 	return result, nil
