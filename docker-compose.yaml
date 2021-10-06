@@ -1,8 +1,17 @@
-version : '3'
+version: '3'
 
 services:
   daily-tracker-calories:
     build: .
     restart: "no"
     ports:
-      - 8000:8080
+      - 8005:8080
+
+  mysql-daily-tracker-calories:
+    image: mariadb:10.1
+    hostname: mysql.docker
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - 3336:3306
+    restart: "no"

@@ -34,7 +34,6 @@ func (service *serviceHistories) CreateHistories(histories *Domain) (*Domain, er
 	}
 	histories.UserID = user.ID
 	histories.NameUser = user.Name
-	log.Println(user.Name)
 	food, err := service.foodsService.GetFoodByName(histories.FoodName)
 	if err != nil {
 		return &Domain{}, err
@@ -42,7 +41,6 @@ func (service *serviceHistories) CreateHistories(histories *Domain) (*Domain, er
 	histories.FoodID = food.ID
 	histories.FoodName = food.Name
 	histories.Calorie = food.Calorie
-	log.Println(food.Name)
 	dateTime := time.Now().Format("2012006")
 	histories.Date = dateTime
 	log.Println(histories)
@@ -70,12 +68,11 @@ func (service *serviceHistories) UserStat(userid int) (float64, float64, string,
 	if err != nil {
 		return 0.0, 0.0, "", "", err
 	}
-	status := ""
-	percent := currentCalorie / needCalorie
-	result := percent * 100
-	percentage := strconv.Itoa(int(result))
-	str_percentage := percentage + " %"
-	log.Print(result)
+	var status string
+	divCalorie := currentCalorie / needCalorie
+	result := divCalorie * 100
+	convResult := strconv.Itoa(int(result))
+	strPercentage := convResult + " %"
 	if result < 80 {
 		status = "Kurang Makan (<80%)"
 	} else if result >= 80 && result <= 100 {
@@ -83,5 +80,5 @@ func (service *serviceHistories) UserStat(userid int) (float64, float64, string,
 	} else {
 		status = "Kelebihan Makan (>100%)"
 	}
-	return currentCalorie, needCalorie, str_percentage, status, nil
+	return currentCalorie, needCalorie, strPercentage, status, nil
 }

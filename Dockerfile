@@ -18,8 +18,8 @@ RUN apk update && apk upgrade && \
 WORKDIR /app
 
 #STOPSIGNAL SIGINT
-EXPOSE 8080
-COPY --from=builder /app/mainrun /app
-CMD /app/mainrun
+#EXPOSE 8080
+#COPY --from=builder /app/mainrun /app
+#CMD /app/mainrun
 
 
