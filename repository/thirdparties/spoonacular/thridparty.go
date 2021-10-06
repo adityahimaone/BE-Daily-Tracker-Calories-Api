@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/spf13/viper"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
 )
@@ -28,7 +27,6 @@ func (s spoonacularAPI) GetFoodByName(name string) (*foodAPI.Domain, error) {
 	minCal := 0
 	number := 1
 	urlString := fmt.Sprintf("https://api.spoonacular.com/recipes/complexSearch?apiKey=%s&query=%s&minCalories=%d&number=%d", apikey, joinQuery, minCal, number)
-	log.Println(urlString)
 	response, err := http.Get(urlString)
 	if err != nil {
 		panic(err)

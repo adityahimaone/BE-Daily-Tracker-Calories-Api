@@ -9,8 +9,6 @@ type Domain struct {
 	Password  string
 	Avatar    string
 	Gender    string
-	Token     string
-	Calorie   int
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }

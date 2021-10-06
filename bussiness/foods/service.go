@@ -16,22 +16,22 @@ func NewService(repositoryFood Repository, foodAPIRepo foodAPI.Repository) Servi
 	}
 }
 
-func (s *serviceFoods) GetFoodByID(id int) (*Domain, error) {
-	result, err := s.repository.GetFoodByID(id)
+func (service *serviceFoods) GetFoodByID(id int) (*Domain, error) {
+	result, err := service.repository.GetFoodByID(id)
 	if err != nil {
 		return &Domain{}, err
 	}
 	return result, nil
 }
 
-func (s *serviceFoods) GetFoodByName(name string) (*Domain, error) {
-	result, err := s.repository.GetFoodByName(name)
+func (service *serviceFoods) GetFoodByName(name string) (*Domain, error) {
+	result, err := service.repository.GetFoodByName(name)
 	if err != nil {
-		apiFood, err := s.GetFoodAPI(name)
+		apiFood, err := service.GetFoodAPI(name)
 		if err != nil {
 			return &Domain{}, err
 		}
-		insert, err := s.SaveFood(apiFood)
+		insert, err := service.SaveFood(apiFood)
 		if err != nil {
 			return &Domain{}, err
 		}
@@ -40,8 +40,8 @@ func (s *serviceFoods) GetFoodByName(name string) (*Domain, error) {
 	return result, nil
 }
 
-func (s *serviceFoods) GetFoodAPI(name string) (*Domain, error) {
-	result, err := s.foodAPIRepo.GetFoodByName(name)
+func (service *serviceFoods) GetFoodAPI(name string) (*Domain, error) {
+	result, err := service.foodAPIRepo.GetFoodByName(name)
 	if err != nil {
 		return &Domain{}, err
 	}
@@ -53,50 +53,34 @@ func (s *serviceFoods) GetFoodAPI(name string) (*Domain, error) {
 	return &newRes, nil
 }
 
-func (s *serviceFoods) SaveFood(food *Domain) (*Domain, error) {
-	result, err := s.repository.Insert(food)
+func (service *serviceFoods) SaveFood(food *Domain) (*Domain, error) {
+	result, err := service.repository.Insert(food)
 	if err != nil {
 		return &Domain{}, err
 	}
 	return result, nil
 }
 
-func (s *serviceFoods) GetAllFood() (*[]Domain, error) {
-	result, err := s.repository.GetAllFood()
+func (service *serviceFoods) GetAllFood() (*[]Domain, error) {
+	result, err := service.repository.GetAllFood()
 	if err != nil {
 		return &[]Domain{}, err
 	}
 	return result, nil
 }
 
-func (s *serviceFoods) DeleteFood(id int, food *Domain) (*Domain, error) {
-	result, err := s.repository.Delete(id, food)
+func (service *serviceFoods) DeleteFood(id int, food *Domain) (*Domain, error) {
+	result, err := service.repository.Delete(id, food)
 	if err != nil {
 		return &Domain{}, err
 	}
 	return result, nil
 }
 
-func (s *serviceFoods) EditFood(id int, food *Domain) (*Domain, error) {
-	result, err := s.repository.Update(id, food)
+func (service *serviceFoods) EditFood(id int, food *Domain) (*Domain, error) {
+	result, err := service.repository.Update(id, food)
 	if err != nil {
 		return &Domain{}, err
 	}
 	return result, nil
 }
-
-/*func (s *serviceFoods) GetFoodByName(name string) (*Domain, error) {
-	result, err := s.repository.GetFoodByName(name)
-	if err != nil {
-		return &Domain{}, err
-	}
-	return result, nil
-}*/
-
-/*func (s *serviceFoods) SaveFood(food *Domain) (*Domain, error) {
-	result, err := s.repository.Insert(food)
-	if err != nil {
-		return &Domain{}, err
-	}
-	return result, nil
-}*/

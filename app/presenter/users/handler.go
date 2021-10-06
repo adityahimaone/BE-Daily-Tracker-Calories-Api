@@ -69,8 +69,8 @@ func (handler *Presenter) LoginUser(echoContext echo.Context) error {
 	}
 	resp, err := handler.serviceUser.Login(req.Email, req.Password)
 	if err != nil {
-		response := helper.APIResponse("Failed Login", http.StatusBadRequest, "Error", nil)
-		return echoContext.JSON(http.StatusBadRequest, response)
+		response := helper.APIResponse("Failed Login", http.StatusInternalServerError, "Error", nil)
+		return echoContext.JSON(http.StatusInternalServerError, response)
 	}
 	response := helper.APIResponse("Success Login", http.StatusOK, "Success", _response.UserLogin{Token: resp})
 	return echoContext.JSON(http.StatusOK, response)
@@ -93,8 +93,8 @@ func (handler *Presenter) EditUser(echoContext echo.Context) error {
 	userID := user.ID
 	resp, err := handler.serviceUser.EditUser(userID, domain)
 	if err != nil {
-		response := helper.APIResponse("Failed", http.StatusBadRequest, "Error", nil)
-		return echoContext.JSON(http.StatusBadRequest, response)
+		response := helper.APIResponse("Failed", http.StatusInternalServerError, "Error", nil)
+		return echoContext.JSON(http.StatusInternalServerError, response)
 	}
 	response := helper.APIResponse("Success", http.StatusOK, "Success", _response.FromDomain(*resp))
 	return echoContext.JSON(http.StatusOK, response)
@@ -108,8 +108,8 @@ func (handler *Presenter) FindByID(echoContext echo.Context) error {
 	}
 	resp, err := handler.serviceUser.FindByID(id)
 	if err != nil {
-		response := helper.APIResponse("Failed", http.StatusBadRequest, "Error", nil)
-		return echoContext.JSON(http.StatusBadRequest, response)
+		response := helper.APIResponse("Failed", http.StatusInternalServerError, "Error", nil)
+		return echoContext.JSON(http.StatusInternalServerError, response)
 	}
 	response := helper.APIResponse("Success", http.StatusOK, "Success", _response.FromDomain(*resp))
 	return echoContext.JSON(http.StatusOK, response)
@@ -142,8 +142,8 @@ func (handler *Presenter) UploadAvatar(echoContext echo.Context) error {
 	}
 	_, err = handler.serviceUser.UploadAvatar(userID, path)
 	if err != nil {
-		response := helper.APIResponse("Uploud Avatar Failed", http.StatusBadRequest, "Error", err)
-		return echoContext.JSON(http.StatusBadRequest, response)
+		response := helper.APIResponse("Uploud Avatar Failed", http.StatusInternalServerError, "Error", err)
+		return echoContext.JSON(http.StatusInternalServerError, response)
 	}
 	response := helper.APIResponse("Success", http.StatusOK, "Success", fmt.Sprintf("File %s uploaded successfully with fields User ID : %d and path : %s", file.Filename, user.ID, path))
 	return echoContext.JSON(http.StatusOK, response)

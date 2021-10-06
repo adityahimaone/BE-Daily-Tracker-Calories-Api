@@ -21,10 +21,13 @@ func NewService(repositoryUser Repository, jwtauth *auth.ConfigJWT) Service {
 func (service *serviceUsers) RegisterUser(user *Domain) (*Domain, error) {
 	passwordHash, err := helper.PasswordHash(user.Password)
 	if err != nil {
-		panic(err)
+		return &Domain{}, err
 	}
 	user.Password = passwordHash
 	valid, err := service.EmailAvailable(user.Email)
+	if err != nil {
+		return &Domain{}, err
+	}
 	if valid == true {
 		result, err := service.repository.Insert(user)
 		if err != nil {
@@ -32,13 +35,13 @@ func (service *serviceUsers) RegisterUser(user *Domain) (*Domain, error) {
 		}
 		return result, err
 	}
-	return &Domain{}, errors.New("email registered")
+	return &Domain{}, err
 }
 
 func (service *serviceUsers) EditUser(id int, user *Domain) (*Domain, error) {
 	passwordHash, err := helper.PasswordHash(user.Password)
 	if err != nil {
-		panic(err)
+		return &Domain{}, err
 	}
 	user.Password = passwordHash
 	result, err := service.repository.Update(id, user)

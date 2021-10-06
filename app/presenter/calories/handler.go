@@ -39,8 +39,8 @@ func (handler *Presenter) CountCalorie(echoContext echo.Context) error {
 	domain := _request.ToDomain(req)
 	_, err := handler.serviceCalorie.CountCalorie(domain)
 	if err != nil {
-		response := helper.APIResponse("Failed Get Calorie", http.StatusBadRequest, "Error", err)
-		return echoContext.JSON(http.StatusBadRequest, response)
+		response := helper.APIResponse("Failed Get Calorie", http.StatusInternalServerError, "Error", err)
+		return echoContext.JSON(http.StatusInternalServerError, response)
 	}
 	response := helper.APIResponse("Success Get Calorie", http.StatusOK, "Success", _response.CalorieResult{ResultCalorie: domain.Calorie})
 	return echoContext.JSON(http.StatusOK, response)
@@ -63,8 +63,8 @@ func (handler *Presenter) SaveCalorie(echoContext echo.Context) error {
 	userID := user.ID
 	resp, err := handler.serviceCalorie.CreateCalorie(domain, userID)
 	if err != nil {
-		response := helper.APIResponse("Failed Get Calorie", http.StatusBadRequest, "Error", err)
-		return echoContext.JSON(http.StatusBadRequest, response)
+		response := helper.APIResponse("Failed Get Calorie", http.StatusInternalServerError, "Error", err)
+		return echoContext.JSON(http.StatusInternalServerError, response)
 	}
 	response := helper.APIResponse("Success Get Calorie", http.StatusOK, "Success", _response.FromDomain(*resp))
 	return echoContext.JSON(http.StatusOK, response)
@@ -75,8 +75,8 @@ func (handler *Presenter) GetCalorieByUserID(echoContext echo.Context) error {
 	userID := user.ID
 	resp, err := handler.serviceCalorie.GetCalorieByUserID(userID)
 	if err != nil {
-		response := helper.APIResponse("Failed Get Calorie By User ID", http.StatusBadRequest, "Error", err)
-		return echoContext.JSON(http.StatusBadRequest, response)
+		response := helper.APIResponse("Failed Get Calorie By User ID", http.StatusInternalServerError, "Error", err)
+		return echoContext.JSON(http.StatusInternalServerError, response)
 	}
 	response := helper.APIResponse("Success Get Calorie", http.StatusOK, "Success", _response.FromDomain(*resp))
 	return echoContext.JSON(http.StatusOK, response)
