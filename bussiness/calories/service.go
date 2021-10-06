@@ -16,8 +16,8 @@ func NewService(repositoryCalorie Repository, userServ _users.Service) Service {
 	}
 }
 
-func (s *serviceCalorie) CountCalorie(calorie *Domain) (*Domain, error) {
-	activityValue := calorie.ActivityType
+func (service *serviceCalorie) CountCalorie(calorie *Domain) (*Domain, error) {
+	activityTypeValue := calorie.ActivityType
 	weight := calorie.Weight
 	weightFloat := float64(weight)
 	height := calorie.Height
@@ -27,7 +27,7 @@ func (s *serviceCalorie) CountCalorie(calorie *Domain) (*Domain, error) {
 	gender := calorie.Gender
 	valueActivity := 0.0
 	calories := 0.0
-	switch activityValue {
+	switch activityTypeValue {
 	case 1:
 		valueActivity = 1.2
 	case 2:
@@ -50,37 +50,37 @@ func (s *serviceCalorie) CountCalorie(calorie *Domain) (*Domain, error) {
 	return &Domain{}, nil
 }
 
-func (s *serviceCalorie) CreateCalorie(calorie *Domain, idUser int) (*Domain, error) {
+func (service *serviceCalorie) CreateCalorie(calorie *Domain, idUser int) (*Domain, error) {
 	calorie.UserID = idUser
-	_, err := s.CountCalorie(calorie)
+	_, err := service.CountCalorie(calorie)
 	if err != nil {
 		return &Domain{}, err
 	}
-	validId, err := s.repository.GetCalorieByUserID(idUser)
+	validId, err := service.repository.GetCalorieByUserID(idUser)
 	if validId.ID == 0 {
-		result, err := s.repository.Insert(calorie, idUser)
+		result, err := service.repository.Insert(calorie, idUser)
 		if err != nil {
 			return &Domain{}, err
 		}
 		return result, nil
 	}
-	result, err := s.repository.Update(calorie, idUser)
+	result, err := service.repository.Update(calorie, idUser)
 	if err != nil {
 		return &Domain{}, err
 	}
 	return result, nil
 }
 
-func (s *serviceCalorie) GetCalorieByUserID(id int) (*Domain, error) {
-	result, err := s.repository.GetCalorieByUserID(id)
+func (service *serviceCalorie) GetCalorieByUserID(id int) (*Domain, error) {
+	result, err := service.repository.GetCalorieByUserID(id)
 	if err != nil {
 		return &Domain{}, err
 	}
 	return result, nil
 }
 
-func (s *serviceCalorie) GetCalorieFloat(id int) (float64, error) {
-	result, err := s.repository.GetCalorieFloat(id)
+func (service *serviceCalorie) GetCalorieFloat(id int) (float64, error) {
+	result, err := service.repository.GetCalorieFloat(id)
 	if err != nil {
 		return 0.0, err
 	}
