@@ -6,14 +6,7 @@ import (
 	usersDom "daily-tracker-calories/bussiness/users"
 	_mocksUser "daily-tracker-calories/bussiness/users/mocks"
 	"daily-tracker-calories/helper"
-	"encoding/json"
 	"github.com/go-playground/validator/v10"
-	"github.com/labstack/echo/v4"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
-	"net/http"
-	"net/http/httptest"
-	"strings"
 	"testing"
 	_ "time"
 )
@@ -51,7 +44,8 @@ func TestMain(m *testing.M) {
 	}
 	m.Run()
 }
-func TestRegister(t *testing.T) {
+
+/*func TestRegister(t *testing.T) {
 	t.Run("Valid Test", func(t *testing.T) {
 		req := httptest.NewRequest(http.MethodPost, "/users/register", strings.NewReader(userRequest))
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
@@ -74,4 +68,4 @@ func TestRegister(t *testing.T) {
 			assert.JSONEq(t, string(expected), rec.Body.String())
 		}
 	})
-}
+}*/
