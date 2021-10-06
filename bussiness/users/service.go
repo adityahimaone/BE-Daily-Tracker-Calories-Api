@@ -24,10 +24,7 @@ func (service *serviceUsers) RegisterUser(user *Domain) (*Domain, error) {
 		return &Domain{}, err
 	}
 	user.Password = passwordHash
-	valid, err := service.EmailAvailable(user.Email)
-	if err != nil {
-		return &Domain{}, err
-	}
+	valid, _ := service.EmailAvailable(user.Email)
 	if valid == true {
 		result, err := service.repository.Insert(user)
 		if err != nil {
@@ -35,7 +32,7 @@ func (service *serviceUsers) RegisterUser(user *Domain) (*Domain, error) {
 		}
 		return result, err
 	}
-	return &Domain{}, err
+	return &Domain{}, errors.New("Email Duplicate")
 }
 
 func (service *serviceUsers) EditUser(id int, user *Domain) (*Domain, error) {
@@ -88,10 +85,7 @@ func (service *serviceUsers) UploadAvatar(id int, fileLocation string) (*Domain,
 }
 
 func (service *serviceUsers) EmailAvailable(email string) (bool, error) {
-	user, err := service.repository.FindByEmail(email)
-	if err != nil {
-		return true, err
-	}
+	user, _ := service.repository.FindByEmail(email)
 	if user.ID == 0 {
 		return true, nil
 	}

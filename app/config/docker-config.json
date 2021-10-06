@@ -3,10 +3,10 @@
     "address": ":8080"
   },
   "database": {
-    "host": "mysql-daily-tracker-calories",
+    "host": "host.docker.internal",
     "port": "3306",
     "user": "root",
-    "pass": "password",
+    "pass": "",
     "name": "dailycalories_test"
   },
   "jwt": {
@@ -14,6 +14,6 @@
     "expired": 2
   },
   "spoonacular": {
-    "apikey" : "f85868cf3e9f448c851d46fe687a40ac"
+    "apikey": "f85868cf3e9f448c851d46fe687a40ac"
   }
 }
