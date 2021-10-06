@@ -10,8 +10,13 @@ services:
   mysql-daily-tracker-calories:
     image: mariadb:10.1
     hostname: mysql.docker
+    command: --init-file /app/config/init.sql
+    volumes:
+      - ./init.sql:/app/config/init.sql
     environment:
       MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: dailycalories_test
+      MYSQL_USER: root
     ports:
       - 3336:3306
     restart: "no"

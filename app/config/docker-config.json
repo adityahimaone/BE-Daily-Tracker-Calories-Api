@@ -3,10 +3,10 @@
     "address": ":8080"
   },
   "database": {
-    "host": "0.0.0.0",
+    "host": "mysql-daily-tracker-calories",
     "port": "3306",
     "user": "root",
-    "pass": "",
+    "pass": "password",
     "name": "dailycalories_test"
   },
   "jwt": {

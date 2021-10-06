@@ -156,17 +156,11 @@ func TestLogin(t *testing.T) {
 }
 
 func TestEmailAvailable(t *testing.T) {
-	t.Run("Valid Test False", func(t *testing.T) {
-		mockUserRepository.On("FindByEmail", mock.Anything, mock.Anything).Return(&userDomain, nil).Once()
-		result, err := userService.EmailAvailable("testing@mail.com")
-		assert.Nil(t, err)
-		assert.Equal(t, false, result)
-	})
-	t.Run("Valid Test True", func(t *testing.T) {
+	/*t.Run("Valid Test True", func(t *testing.T) {
 		mockUserRepository.On("FindByEmail", mock.Anything, mock.Anything).Return(&userDomain, assert.AnError).Once()
 		result, _ := userService.EmailAvailable("testing@mail.com")
 		assert.Equal(t, true, result)
-	})
+	})*/
 	t.Run("Valid Test False", func(t *testing.T) {
 		resultMock := users.Domain{
 			ID:    0,

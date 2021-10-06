@@ -6,7 +6,7 @@ RUN apk update && apk upgrade && \
 WORKDIR /app
 COPY . .
 RUN go mod tidy
-RUN go build -o /mainrun
+RUN go build -o mainrun
 
 #runner
 FROM alpine:latest
@@ -17,9 +17,10 @@ RUN apk update && apk upgrade && \
 
 WORKDIR /app
 
-#STOPSIGNAL SIGINT
-#EXPOSE 8080
-#COPY --from=builder /app/mainrun /app
-#CMD /app/mainrun
+STOPSIGNAL SIGINT
+EXPOSE 8080
+COPY --from=builder /app/mainrun /app
+COPY --from=builder /app/app/config/ /app/app/config/
+CMD /app/mainrun
 
 
