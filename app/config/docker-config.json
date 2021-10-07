@@ -3,10 +3,10 @@
     "address": ":8080"
   },
   "database": {
-    "host": "host.docker.internal",
+    "host": "mysql.docker",
     "port": "3306",
     "user": "root",
-    "pass": "",
+    "pass": "password",
     "name": "dailycalories_test"
   },
   "jwt": {

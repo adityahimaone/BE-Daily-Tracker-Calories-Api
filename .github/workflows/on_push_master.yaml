@@ -3,9 +3,10 @@ name: on-push-develop
 on:
   pull_request:
     branches:
-      - 'develop'
+      - 'master'
   push:
     branches:
+      - 'master'
       - 'develop'
       - 'unit-tests'
       - 'feature/*'
