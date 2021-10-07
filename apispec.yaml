@@ -13,8 +13,8 @@ tags:
     description: food resource
   - name: histories
     description: histories resource
-  - name: calorie
-    description: calorie resource
+  - name: calories
+    description: calories resource
 paths:
   /food:
     post:
@@ -141,12 +141,12 @@ paths:
           description: Invalid Name
         '404':
           description: Food not found
-  /user:
+  /users:
     post:
       tags:
         - user
-      summary: Create user
-      description: This can only be done by the logged in user.
+      summary: Register user
+      description: For Register New User
       operationId: createUser
       responses:
         default:
@@ -158,11 +158,11 @@ paths:
               $ref: '#/components/schemas/User'
         description: Created user object
         required: true
-  /user/login:
-    get:
+  /users/login:
+    post:
       tags:
         - user
-      summary: Logs user into the system
+      summary: Login User
       operationId: loginUser
       parameters:
         - name: username
@@ -192,20 +192,38 @@ paths:
                 $ref: '#/components/schemas/Login'
         '400':
           description: Invalid username/password supplied
-  /user/logout:
-    get:
+  /users/avatars:
+    post:
+      security:
+        - bearerAuth: [ ]
       tags:
         - user
-      summary: Logs out current logged in user session
-      operationId: logoutUser
+      summary: Save Avatars (Using JWT Auth)
+      description: This can only be done by the logged in user.
+      operationId: Save Avatar
       responses:
-        default:
-          description: successful operation
-  '/user/{id}':
+        '200': # status code
+          description: A JSON array of user names
+          content:
+            application/json:
+              schema:
+                type: string
+                example: File example.jpg uploaded successfully
+      requestBody:
+        content:
+          image/png:
+            schema:
+              type: string
+              format: binary
+        description: Created user object
+        required: true
+  '/users/{id}':
     get:
+      security:
+        - bearerAuth: [ ]
       tags:
         - user
-      summary: Get user by user name
+      summary: Get user by ID (Using JWT Auth)
       operationId: getUserByName
       parameters:
         - name: id
@@ -217,6 +235,12 @@ paths:
       responses:
         '200':
           description: successful operation
+          headers:
+            Bearer-Token:
+              description: JWT Auth
+              schema:
+                type: string
+                format: date-time
           content:
             application/json:
               schema:
@@ -229,9 +253,11 @@ paths:
         '404':
           description: User not found
     put:
+      security:
+        - bearerAuth: [ ]
       tags:
         - user
-      summary: Updated user
+      summary: Updated user (Using JWT Auth)
       description: This can only be done by the logged in user.
       operationId: updateUser
       parameters:
@@ -244,6 +270,12 @@ paths:
       responses:
         '200':
           description: Success Delete
+          headers:
+            Bearer-Token:
+              description: JWT Auth
+              schema:
+                type: string
+                format: date-time
         '400':
           description: Invalid user supplied
         '404':
@@ -255,28 +287,10 @@ paths:
               $ref: '#/components/schemas/User'
         description: Updated user object
         required: true
-    delete:
-      tags:
-        - user
-      summary: Delete user
-      description: This can only be done by the logged in user.
-      operationId: deleteUser
-      parameters:
-        - name: id
-          in: path
-          description: The name that needs to be deleted
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Success Delete
-        '400':
-          description: Invalid username supplied
-        '404':
-          description: User not found
   /histories:
     post:
+      security:
+        - bearerAuth: [ ]
       tags:
         - histories
       summary: Create Histories
@@ -285,17 +299,72 @@ paths:
       responses:
         '200':
           description: successful
+          headers:
+            Bearer-Token:
+              description: JWT Auth
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Historie'
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Historie'
-        description: Created user object
+              type: string
+              example: nasi padang
+        description: Created user Historie
         required: true
+  /histories/user:
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - histories
+      summary: Get All Histories By User
+      description: This can only be done by the logged in user.
+      operationId: getAllHistorie
+      responses:
+        '200':
+          description: successful
+          headers:
+            Bearer-Token:
+              description: JWT Auth
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Histories_List'
+  /histories/stat:
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - histories
+      summary: Get Stat By User
+      description: This can only be done by the logged in user.
+      operationId: getStat
+      responses:
+        '200':
+          description: successful
+          headers:
+            Bearer-Token:
+              description: JWT Auth
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User_stat'
   /calorie:
     post:
       tags:
-        - calorie
+        - calories
       summary: Count Calorie
       description: This can only be done by the logged in user.
       operationId: createCalorie
@@ -313,9 +382,60 @@ paths:
               $ref: '#/components/schemas/Calorie'
         description: Created user object
         required: true
+  /calorie/save:
+    post:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - calories
+      summary: Save Calorie (Insert/Update)
+      description: This can only be done by the logged in user.
+      operationId: saveCalorie
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            Bearer-Token:
+              description: JWT Auth
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response_Calorie'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Calorie'
+        description: Created user object
+        required: true
+  /calorie/user:
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - calories
+      summary: Get Calorie By User ID
+      description: This can only be done by the logged in user.
+      operationId: getCalorie
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            Bearer-Token:
+              description: JWT Auth
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response_Calorie'
 externalDocs:
   description: Find out more about Swagger
-  url: 'http://swagger.io'
+  url: 'https://swagger.io'
 components:
   schemas:
     User:
@@ -323,28 +443,19 @@ components:
         id:
           type: integer
           format: uuid
-          example: 15
-        username:
+          example: 1
+        email:
           type: string
-          example: cloud99
+          example: budi@mail.com
         password:
           type: string
           example: secret
-        email:
-          type: string
-          example: awan@mail.com
         name:
           type: string
-          example: clowdi temberman
-        avatar:
-          type: string
-          example: ava/avatar.png
+          example: opung luhut
         gender:
           type: string
           example: male
-        calorie_id:
-          type: integer
-          example: 10
         created_at:
           type: string
           format: timestamp
@@ -363,9 +474,9 @@ components:
         name:
           type: integer
           example: Bakso
-        image:
+        photo:
           type: string
-          example: /images/food/bakso.jpg
+          example: bakso.jpg
         calorie:
           type: integer
           example: 351
@@ -384,14 +495,14 @@ components:
       example:
         - id: 1
           name: Bakso
-          image: images/foods/bakso.jpg
-          calorie: 254
+          image: bakso.jpg
+          calorie: 254.10
           created_at: '124123413'
           updated_at: '124123413'
         - id: 2
           name: Sate
-          image: images/foods/sate.jpg
-          calorie: 254
+          image: sate.jpg
+          calorie: 350.21
           created_at: '124123413'
           updated_at: '124123413'
     Login:
@@ -410,19 +521,25 @@ components:
           type: integer
           format: uuid
           example: 15
-        total_calorie:
-          type: integer
-          example: 2120
         user_id:
           type: integer
           example: 12
-        status:
+        name_user:
           type: string
-          example: Over
+          example: opung luhut
+        food_id:
+          type: integer
+          example: 12
+        food_name:
+          type: string
+          example: Sate
+        calorie:
+          type: integer
+          example: 500
         date:
           type: string
           format: date
-          example: '2021-04-12'
+          example: '7102021'
         created_at:
           type: string
           format: timestamp
@@ -431,6 +548,29 @@ components:
           type: string
           format: timestamp
           example: '124123413'
+    Histories_List:
+      type: "array"
+      items:
+        $ref: "#/components/schemas/Historie"
+      example:
+        - id: 1
+          user_id: 15
+          name_user: opung luhut
+          food_id: 1
+          calorie: 210
+          food_name: nasi padang
+          date: '7102021'
+          created_at: '124123413'
+          updated_at: '124123413'
+        - id: 2
+          user_id: 15
+          name_user: opung luhut
+          food_id: 2
+          calorie: 351
+          food_name: bakso
+          date: '7102021'
+          created_at: '124123413'
+          updated_at: '124123413'
     Calorie:
       properties:
         id:
@@ -449,9 +589,26 @@ components:
         activity:
           type: integer
           example: 2
+    User_stat:
+      properties:
+        calorie_need:
+          type: integer
+          example: 1328.125
+        calorie_current:
+          type: integer
+          example: 1200
+        percentage:
+          type: string
+          example: 85%
+        status:
+          type: string
+          example: cukup
     Response_Calorie:
       properties:
-        count_calorie:
+        user_id:
+          type: integer
+          example: 1
+        result_calorie:
           type: integer
           example: 2210
   requestBodies:
@@ -472,15 +629,7 @@ components:
       description: List of user object
       required: true
   securitySchemes:
-    petstore_auth:
-      type: oauth2
-      flows:
-        implicit:
-          authorizationUrl: 'http://petstore.swagger.io/oauth/dialog'
-          scopes:
-            'write:pets': modify pets in your account
-            'read:pets': read your pets
-    api_key:
-      type: apiKey
-      name: api_key
-      in: header
+    bearerAuth: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
